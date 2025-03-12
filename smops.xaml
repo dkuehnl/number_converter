@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="App1.smops"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:App1"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="Configure Filter for SMOPS" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,10,0,0"/>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,10,0,0">
+                <StackPanel Orientation="Vertical" Margin="0,20,0,0">
+                    <RadioButton x:Name="on_of_button" Content="is one of" Height="36" Width="107"/>
+                    <RadioButton x:Name="not_one_of_button" Content="is not one of" Height="36" Width="107"/>
+                </StackPanel>
+
+                <TreeView x:Name="Selection" SelectionMode="Single" Width="500">
+                    <TreeView.RootNodes>
+                        <TreeViewNode>
+                            <TreeViewNode.Content>
+                                Number Elements
+                            </TreeViewNode.Content>
+                            <TreeViewNode.Children>
+                                <TreeViewNode>
+                                    <TreeViewNode.Content>
+                                        reg_contact
+                                    </TreeViewNode.Content>
+                                </TreeViewNode>
+                                <TreeViewNode>
+                                    <TreeViewNode.Content>
+                                        sip_first_leg_response_code
+                                    </TreeViewNode.Content>
+                                </TreeViewNode>
+                            </TreeViewNode.Children>
+                        </TreeViewNode>
+
+                        <TreeViewNode>
+                            <TreeViewNode.Content>
+                                Call Network Elements
+                            </TreeViewNode.Content>
+                            <TreeViewNode.Children>
+                                <TreeViewNode>
+                                    <TreeViewNode.Content>
+                                        common_first_leg_destination_network_element
+                                    </TreeViewNode.Content>
+                                </TreeViewNode>
+                                <TreeViewNode>
+                                    <TreeViewNode.Content>
+                                        common_2nd_leg_source_network_element
+                                    </TreeViewNode.Content>
+                                </TreeViewNode>
+                            </TreeViewNode.Children>
+                        </TreeViewNode>
+
+                        <TreeViewNode>
+                            <TreeViewNode.Content>
+                                Reg Network Elements
+                            </TreeViewNode.Content>
+                            <TreeViewNode.Children>
+                                <TreeViewNode>
+                                    <TreeViewNode.Content>
+                                        reg_common_first_leg_destination_network_element
+                                    </TreeViewNode.Content>
+                                </TreeViewNode>
+                            </TreeViewNode.Children>
+                        </TreeViewNode>
+
+                    </TreeView.RootNodes>
+                </TreeView>
+            </StackPanel>
+            <StackPanel Margin="110,30,0,0" Width="500" HorizontalAlignment="Left">
+                <TextBlock Text="If no valid field is available, enter your custom header:" />
+                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                    <ToggleSwitch AutomationProperties.Name="no_field" />
+                    <TextBox Width="400" Height="28" PlaceholderText="custom_header" IsEnabled="False"/>
+                </StackPanel>
+                <TextBlock Text="Disable File-Export:" Margin="0,10,0,0" />
+                <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
+                    <ToggleSwitch AutomationProperties.Name="save_to_file" VerticalAlignment="Top"/>
+                    <RichEditBox Height="200" Width="400" IsEnabled="False"/>
+                </StackPanel>
+            </StackPanel>
+            
+        </StackPanel>
+    </Grid>
+</Page>
