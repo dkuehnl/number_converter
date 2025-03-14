@@ -7,10 +7,14 @@
 #include "eolive.xaml.h"
 #include "eosight.xaml.h"
 
+#include <iostream>
+#include <algorithm>
+
 #include <winrt/Microsoft.UI.Windowing.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
 #include <winrt/Microsoft.UI.Xaml.h>
 #include <winrt/Microsoft.UI.Dispatching.h>
+#include <winrt/Microsoft.UI.Xaml.Documents.h>
 #include <winrt/Windows.UI.h>
 #include <winrt/Windows.UI.Xaml.Interop.h>
 #include <winrt/Windows.Storage.h>
@@ -28,6 +32,8 @@ using namespace Microsoft::UI::Xaml::Controls;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
+
+#define MAX_PREVIEW_VALUE 10
 
 namespace winrt::App1::implementation
 {
@@ -95,10 +101,62 @@ namespace winrt::App1::implementation
         if (file != nullptr) {
             file_picker_output().Text(file.Name()); 
             file_picker().IsEnabled(true); 
+            m_selected_file = file;
         }
         else {
             file_picker_output().Text(L"No File selected"); 
             file_picker().IsEnabled(true); 
+        }
+    }
+
+    winrt::Windows::Foundation::IAsyncAction MainWindow::btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
+        if (m_selected_file != nullptr) {
+            if (m_selected_file.FileType() == L".csv") {
+                co_await m_csv_parser.load_file(m_selected_file);
+
+                char delim = winrt::to_string(m_selected_delim)[0];
+                data_output().Inlines().Clear(); 
+                m_headers = m_csv_parser.get_headers(delim);
+                
+                m_header_collection.Clear(); 
+                for (const std::string& headers : m_headers) {
+                    m_header_collection.Append(winrt::to_hstring(headers)); 
+                    auto header_text = winrt::Microsoft::UI::Xaml::Documents::Run(); 
+                    auto bold = winrt::Microsoft::UI::Xaml::Documents::Bold(); 
+                    header_text.Text(winrt::to_hstring(headers) + L"\t");
+                    bold.Inlines().Append(header_text);
+                    data_output().Inlines().Append(bold); 
+                }
+                cb_header().ItemsSource(m_header_collection); 
+                cb_header().SelectedIndex(0);
+                
+
+                m_values = m_csv_parser.get_rows(delim);
+                for (int i = 0; i < std::min(MAX_PREVIEW_VALUE, m_values.size()); i++) {
+                    auto outer_text = winrt::Microsoft::UI::Xaml::Documents::Run(); 
+                    outer_text.Text(L"\n");
+                    data_output().Inlines().Append(outer_text);
+                    for (const auto& values : m_values[i]) {
+                        auto inner_text = winrt::Microsoft::UI::Xaml::Documents::Run();
+                        inner_text.Text(winrt::to_hstring(values) + L"\t");
+                        data_output().Inlines().Append(inner_text); 
+                    }
+                }
+            } 
+        }
+        else {
+            data_output().Text(L"No File selected"); 
+        }
+        
+    }
+
+    void MainWindow::delim_menu_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
+        auto menu_item = sender.as<winrt::Microsoft::UI::Xaml::Controls::MenuFlyoutItem>(); 
+        if (menu_item) {
+            hstring selected_value = menu_item.Text(); 
+            btn_delim().Content(box_value(selected_value));
+
+            m_selected_delim = selected_value;
         }
     }
 

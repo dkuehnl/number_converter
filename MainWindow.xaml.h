@@ -1,6 +1,8 @@
 #pragma once
 
 #include "MainWindow.g.h"
+#include "csv_parser.h"
+#include <winrt/Windows.Foundation.h>
 
 namespace winrt::App1::implementation
 {
@@ -13,10 +15,18 @@ namespace winrt::App1::implementation
 
         void navView_SelectionChanged(Microsoft::UI::Xaml::Controls::NavigationView const& sender, Microsoft::UI::Xaml::Controls::NavigationViewSelectionChangedEventArgs const& args);
         fire_and_forget click_file_picker(IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
+        winrt::Windows::Foundation::IAsyncAction btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
+        void delim_menu_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
 
     private:
         winrt::Microsoft::UI::Windowing::AppWindow _appWindow{ nullptr };
         winrt::Microsoft::UI::Windowing::AppWindowTitleBar _titleBar{ nullptr };
+        winrt::Windows::Storage::StorageFile m_selected_file{ nullptr };
+        CSVparser m_csv_parser; 
+        hstring m_selected_delim = L",";
+        std::vector<std::string> m_headers;
+        winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_header_collection{winrt::single_threaded_observable_vector<winrt::hstring>()};
+        std::vector<std::vector<std::string>> m_values;
     };
 }
 
