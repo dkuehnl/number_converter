@@ -15,9 +15,9 @@ namespace winrt::App1::implementation
 
         void navView_SelectionChanged(Microsoft::UI::Xaml::Controls::NavigationView const& sender, Microsoft::UI::Xaml::Controls::NavigationViewSelectionChangedEventArgs const& args);
         fire_and_forget click_file_picker(IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
-        winrt::Windows::Foundation::IAsyncAction btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
-        void delim_menu_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
-
+        void cb_delim_chg(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e);
+        void cb_header_chg(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e);
+        void handle_infobar(const std::string& title, const hstring& message, const std::string& severity); 
     private:
         winrt::Microsoft::UI::Windowing::AppWindow _appWindow{ nullptr };
         winrt::Microsoft::UI::Windowing::AppWindowTitleBar _titleBar{ nullptr };
@@ -27,6 +27,9 @@ namespace winrt::App1::implementation
         std::vector<std::string> m_headers;
         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_header_collection{winrt::single_threaded_observable_vector<winrt::hstring>()};
         std::vector<std::vector<std::string>> m_values;
+        winrt::Windows::Foundation::IAsyncAction display_file();
+        hstring m_selected_header = L" ";
+
     };
 }
 

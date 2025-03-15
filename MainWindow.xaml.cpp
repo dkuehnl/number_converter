@@ -22,6 +22,7 @@
 #include <microsoft.ui.xaml.window.h>
 #include <Shobjidl.h>
 
+
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
 using namespace Microsoft::UI::Windowing;
@@ -33,7 +34,7 @@ using namespace Microsoft::UI::Xaml::Controls;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-#define MAX_PREVIEW_VALUE 10
+constexpr auto MAX_PREVIEW_VALUE = 10;
 
 namespace winrt::App1::implementation
 {
@@ -102,6 +103,7 @@ namespace winrt::App1::implementation
             file_picker_output().Text(file.Name()); 
             file_picker().IsEnabled(true); 
             m_selected_file = file;
+            co_await display_file();
         }
         else {
             file_picker_output().Text(L"No File selected"); 
@@ -109,7 +111,7 @@ namespace winrt::App1::implementation
         }
     }
 
-    winrt::Windows::Foundation::IAsyncAction MainWindow::btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
+    winrt::Windows::Foundation::IAsyncAction MainWindow::display_file() {
         if (m_selected_file != nullptr) {
             if (m_selected_file.FileType() == L".csv") {
                 co_await m_csv_parser.load_file(m_selected_file);
@@ -130,9 +132,8 @@ namespace winrt::App1::implementation
                 cb_header().ItemsSource(m_header_collection); 
                 cb_header().SelectedIndex(0);
                 
-
                 m_values = m_csv_parser.get_rows(delim);
-                for (int i = 0; i < std::min(MAX_PREVIEW_VALUE, m_values.size()); i++) {
+                for (int i = 0; i < min(MAX_PREVIEW_VALUE, m_values.size()); i++) {
                     auto outer_text = winrt::Microsoft::UI::Xaml::Documents::Run(); 
                     outer_text.Text(L"\n");
                     data_output().Inlines().Append(outer_text);
@@ -142,7 +143,10 @@ namespace winrt::App1::implementation
                         data_output().Inlines().Append(inner_text); 
                     }
                 }
-            } 
+            }
+            else if (m_selected_file.FileType() == L".xls") {
+                MainWindow::handle_infobar("Info", L"The file-type .xls is not implemented yet.", "info");
+            }
         }
         else {
             data_output().Text(L"No File selected"); 
@@ -150,14 +154,61 @@ namespace winrt::App1::implementation
         
     }
 
-    void MainWindow::delim_menu_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
-        auto menu_item = sender.as<winrt::Microsoft::UI::Xaml::Controls::MenuFlyoutItem>(); 
-        if (menu_item) {
-            hstring selected_value = menu_item.Text(); 
-            btn_delim().Content(box_value(selected_value));
-
-            m_selected_delim = selected_value;
+    void MainWindow::cb_delim_chg(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e) {
+        if (auto com_box = sender.try_as<ComboBox>()) {
+            if (auto selected_item = com_box.SelectedItem().try_as<ComboBoxItem>()) {
+                m_selected_delim = selected_item.Content().as<hstring>(); 
+            }
+            else {
+                MainWindow::handle_infobar("Error", L"combox couldn't be assigned, using standard-value", "error");
+                m_selected_delim = L",";
+            }
         }
+        else {
+            MainWindow::handle_infobar("Error", L"combox couldn't be assigned, using standard-value", "error");
+            m_selected_delim = L",";
+        }
+    }
+
+    void MainWindow::cb_header_chg(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e) {
+        if (auto com_box = sender.try_as<ComboBox>()) {
+            if (com_box.SelectedItem() != nullptr) {
+                m_selected_header = winrt::unbox_value<hstring>(com_box.SelectedItem());
+                hstring message = L"Selected header: " + m_selected_header;
+                MainWindow::handle_infobar("Info", message, "info");
+            }
+            else {
+                MainWindow::handle_infobar("Error", L"Combox empty, could not assign any value for further proceeding", "error"); 
+                m_selected_header = L" ";
+            }
+        }
+        else {
+            MainWindow::handle_infobar("Error", L"Something went wrong with the combox-object", "error");
+            m_selected_header = L" ";
+        }
+    }
+
+    void MainWindow::handle_infobar(const std::string& title, const hstring& message, const std::string& severity) {
+        message_window().Title(winrt::to_hstring(title) + L": ");
+        message_window().Message(message); 
+
+        if (severity == "info") {
+            message_window().Severity(InfoBarSeverity::Informational); 
+        }
+        else if (severity == "warning") {
+            message_window().Severity(InfoBarSeverity::Warning); 
+        }
+        else if (severity == "error") {
+            message_window().Severity(InfoBarSeverity::Error);
+        }
+        else if (severity == "success") {
+            message_window().Severity(InfoBarSeverity::Success);
+        }
+        else {
+            message_window().Severity(InfoBarSeverity::Informational);
+        }
+
+        message_window().IsOpen(true); 
     }
 
 }
