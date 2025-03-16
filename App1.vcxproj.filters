@@ -27,6 +27,12 @@
     <ClCompile Include="xlsx_parser.cpp">
       <Filter>parser</Filter>
     </ClCompile>
+    <ClCompile Include="json_parser.cpp">
+      <Filter>parser</Filter>
+    </ClCompile>
+    <ClCompile Include="convertion_manager.cpp">
+      <Filter>converter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -36,6 +42,12 @@
     </ClInclude>
     <ClInclude Include="xlsx_parser.h">
       <Filter>parser</Filter>
+    </ClInclude>
+    <ClInclude Include="json_parser.h">
+      <Filter>parser</Filter>
+    </ClInclude>
+    <ClInclude Include="convertion_manager.h">
+      <Filter>converter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +83,9 @@
     <Filter Include="parser">
       <UniqueIdentifier>{dcd74d70-397e-4c5c-a0fe-d132e08d09e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="converter">
+      <UniqueIdentifier>{45e4a0e8-a9c8-4b76-8e4d-d6074dfff559}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt" />
@@ -86,5 +101,8 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="App1.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natvis" />
   </ItemGroup>
 </Project>

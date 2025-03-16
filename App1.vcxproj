@@ -107,6 +107,7 @@
     <Manifest Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="convertion_manager.h" />
     <ClInclude Include="csv_parser.h" />
     <ClInclude Include="eolive.xaml.h">
       <DependentUpon>eolive.xaml</DependentUpon>
@@ -116,6 +117,7 @@
       <DependentUpon>eosight.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
+    <ClInclude Include="json_parser.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
@@ -144,6 +146,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="convertion_manager.cpp" />
     <ClCompile Include="csv_parser.cpp" />
     <ClCompile Include="eolive.xaml.cpp">
       <DependentUpon>eolive.xaml</DependentUpon>
@@ -153,6 +156,7 @@
       <DependentUpon>eosight.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
+    <ClCompile Include="json_parser.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -230,6 +234,7 @@
     <Import Project="packages\Microsoft.WindowsAppSDK.1.7.250208002-preview1\build\native\Microsoft.WindowsAppSDK.targets" Condition="Exists('packages\Microsoft.WindowsAppSDK.1.7.250208002-preview1\build\native\Microsoft.WindowsAppSDK.targets')" />
     <Import Project="packages\Microsoft.Web.WebView2.1.0.3124.44\build\native\Microsoft.Web.WebView2.targets" Condition="Exists('packages\Microsoft.Web.WebView2.1.0.3124.44\build\native\Microsoft.Web.WebView2.targets')" />
     <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets')" />
+    <Import Project="packages\nlohmann.json.3.11.3\build\native\nlohmann.json.targets" Condition="Exists('packages\nlohmann.json.3.11.3\build\native\nlohmann.json.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -243,5 +248,6 @@
     <Error Condition="!Exists('packages\Microsoft.Web.WebView2.1.0.3124.44\build\native\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Web.WebView2.1.0.3124.44\build\native\Microsoft.Web.WebView2.targets'))" />
     <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.props'))" />
     <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.240405.15\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+    <Error Condition="!Exists('packages\nlohmann.json.3.11.3\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\nlohmann.json.3.11.3\build\native\nlohmann.json.targets'))" />
   </Target>
 </Project>

@@ -13,12 +13,12 @@
             <TextBlock Text="Configure Filter for SMOPS" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,10,0,0"/>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,10,0,0">
                 <StackPanel Orientation="Vertical" Margin="0,20,0,0">
-                    <RadioButton x:Name="on_of_button" Content="is one of" Height="36" Width="107"/>
+                    <RadioButton x:Name="one_of_button" Content="is one of" Height="36" Width="107"/>
                     <RadioButton x:Name="not_one_of_button" Content="is not one of" Height="36" Width="107"/>
                 </StackPanel>
 
                 <TreeView x:Name="Selection" SelectionMode="Single" Width="500">
-                    <TreeView.RootNodes>
+                    <!--<TreeView.RootNodes>
                         <TreeViewNode>
                             <TreeViewNode.Content>
                                 Number Elements
@@ -68,7 +68,7 @@
                             </TreeViewNode.Children>
                         </TreeViewNode>
 
-                    </TreeView.RootNodes>
+                    </TreeView.RootNodes>-->
                 </TreeView>
             </StackPanel>
             <StackPanel Margin="110,30,0,0" Width="500" HorizontalAlignment="Left">
@@ -83,7 +83,8 @@
                     <RichEditBox Height="200" Width="400" IsEnabled="False"/>
                 </StackPanel>
             </StackPanel>
-            
+            <Button Content="Test-Button" x:Name="btn_test" Click="btn_test_click"/>
+
         </StackPanel>
     </Grid>
 </Page>

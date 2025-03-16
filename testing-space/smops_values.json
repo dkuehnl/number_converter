@@ -1,0 +1,8 @@
+{
+    "smops" : {
+        "Call Network Elements": [ "common_first_leg_destination_network_element" ],
+        "number_elements": [ "reg_common_calling_party_number", "common_calling_party_number"]
+    },
+    "eolive": ["Value1", "value2"],
+    "eosight": ["Value1", "value2", "Value3"]
+}

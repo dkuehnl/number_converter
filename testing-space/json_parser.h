@@ -1,0 +1,5 @@
+class JSONparser {
+    private: 
+
+    public: 
+};
