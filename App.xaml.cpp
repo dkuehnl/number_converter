@@ -10,6 +10,7 @@ using namespace Microsoft::UI::Xaml;
 
 namespace winrt::App1::implementation
 {
+    json_parser App::m_json_parser{ "C:\\Users\\dkueh\\source\\repos\\dkuehnl\\number_converter\\testing-space\\smops_values.json" };
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -39,5 +40,10 @@ namespace winrt::App1::implementation
     {
         window = make<MainWindow>();
         window.Activate();
+    }
+
+    json_parser& App::GetJsonParser()
+    {
+        return m_json_parser;
     }
 }

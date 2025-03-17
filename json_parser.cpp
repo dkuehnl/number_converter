@@ -25,22 +25,26 @@ using json = nlohmann::json;
 			 }
 		 }
 		 else if (key == "eolive") {
-		 
+			 for (const auto& element : value) {
+				 m_parsed_eolive.push_back(element.get<std::string>()); 
+			}
 		 }
 		 else if (key == "eosight") {
-
+			 for (const auto& element : value) {
+				 m_parsed_eosight.push_back(element.get<std::string>()); 
+			 }
 		 }
 	 }
 }
 
-std::unordered_map<std::string, std::vector<std::string>> json_parser::get_smops_filter() {
-
+const std::unordered_map<std::string, std::vector<std::string>>& json_parser::get_smops_filter() const{
+	return m_parsed_smops;
 }
 
-std::vector<std::string> json_parser::get_eosight_filter() {
-
+const std::vector<std::string>& json_parser::get_eosight_filter() const{
+	return m_parsed_eosight;
 }
 
-std::vector<std::string> json_parser::get_eolive_filter() {
-
+const std::vector<std::string>& json_parser::get_eolive_filter() const{
+	return m_parsed_eolive;
 }

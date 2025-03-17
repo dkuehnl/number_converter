@@ -2,6 +2,7 @@
 
 #include "MainWindow.g.h"
 #include "csv_parser.h"
+#include "json_parser.h"
 #include <winrt/Windows.Foundation.h>
 
 namespace winrt::App1::implementation
@@ -9,7 +10,6 @@ namespace winrt::App1::implementation
     struct MainWindow : MainWindowT<MainWindow>
     {
         MainWindow();
-
         int32_t MyProperty();
         void MyProperty(int32_t value);
 
@@ -30,7 +30,6 @@ namespace winrt::App1::implementation
         std::vector<std::vector<std::string>> m_values;
         winrt::Windows::Foundation::IAsyncAction display_file();
         hstring m_selected_header = L" ";
-
     };
 }
 

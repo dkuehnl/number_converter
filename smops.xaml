@@ -17,7 +17,7 @@
                     <RadioButton x:Name="not_one_of_button" Content="is not one of" Height="36" Width="107"/>
                 </StackPanel>
 
-                <TreeView x:Name="Selection" SelectionMode="Single" Width="500">
+                <TreeView x:Name="tv_element_selection" SelectionMode="Single" Width="500">
                     <!--<TreeView.RootNodes>
                         <TreeViewNode>
                             <TreeViewNode.Content>
