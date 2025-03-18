@@ -11,20 +11,29 @@ namespace winrt::App1::implementation
         smops();
         int32_t MyProperty();
         void MyProperty(int32_t value);
-        void OnLoaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
         //std::vector<hstring> get_filter_options(); 
 
         void btn_test_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e); 
+
+        void search_field_on_change(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::TextChangedEventArgs const& args);
+        //void ts_alt_filepath(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
+        void ts_alt_search_field(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
+        void rb_one_of_checked(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
+        void tv_element_selection_SChanged(winrt::Microsoft::UI::Xaml::Controls::TreeView const& sender, winrt::Microsoft::UI::Xaml::Controls::TreeViewSelectionChangedEventArgs const& args);
+
+        const hstring& get_filter_type() const;
+        const hstring& get_search_filter() const;
+        //const hstring& set_direct_output() const;
         
     private:
         std::shared_ptr<json_parser> m_json_parser;
-        hstring get_filter_type(); 
-        hstring get_search_filter(); 
-        hstring get_alternativ_export_path();
+        hstring m_search_filter = L" ";
+        hstring m_alt_search_filter = L" ";
+        hstring m_one_of = L"error"; 
+        bool m_alt_search_field_active = false; 
+ 
+        void OnLoaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
         void build_treeview(std::unordered_map<std::string, std::vector<std::string>> value_map);
-        
-
-        //void myButton_Click(IInspectable const& sender, Microsoft::UI::Xaml::RoutedEventArgs const& args);
     };
 }
 

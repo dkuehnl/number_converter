@@ -32,34 +32,27 @@ namespace winrt::App1::implementation
     smops::smops() {
         InitializeComponent(); 
         this->Loaded({ this, &smops::OnLoaded });
+        tb_alt_search_field().TextChanged({ this, &smops::search_field_on_change });
     }
 
     void smops::OnLoaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
-        //for (const auto& [key, value] : json_parser::get_smops_filter())
         json_parser& parser = App::GetJsonParser();
         std::unordered_map<std::string, std::vector<std::string>> smops_filter = parser.get_smops_filter();
         smops::build_treeview(smops_filter); 
          
     }
     
-    hstring smops::get_filter_type() {
-        if (one_of_button().IsChecked().GetBoolean()) {
-            return L"is one of";
-        }
-        else if (not_one_of_button().IsChecked().GetBoolean()) {
-            return L"is not one of"; 
-        }
-        else {
-            return L"error";
-        }
+    const hstring& smops::get_filter_type() const{
+        return m_one_of;
     }
     
-    hstring smops::get_search_filter() {
-        return L" ";
-    }
-
-    hstring smops::get_alternativ_export_path() {
-        return L" ";
+    const hstring& smops::get_search_filter() const {
+        if (m_alt_search_field_active) {
+            return m_alt_search_filter;
+        }
+        else {
+            return m_search_filter;
+        }
     }
 
     void smops::btn_test_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
@@ -82,4 +75,54 @@ namespace winrt::App1::implementation
         }
     }
 
+    void smops::tv_element_selection_SChanged(winrt::Microsoft::UI::Xaml::Controls::TreeView const& sender, winrt::Microsoft::UI::Xaml::Controls::TreeViewSelectionChangedEventArgs const& args) {
+        if (sender.SelectedNodes().Size() > 0) {
+            auto selectedNode = sender.SelectedNodes().GetAt(0); 
+            winrt::hstring node_text = winrt::unbox_value<winrt::hstring>(selectedNode.Content());
+            m_search_filter = node_text;
+        }
+    }
+
+    void smops::rb_one_of_checked(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
+        if (one_of_button().IsChecked().GetBoolean()) {
+            m_one_of = L"is one of";
+        }
+        else if (not_one_of_button().IsChecked().GetBoolean()) {
+            m_one_of = L"is not one of";
+        }
+        else {
+            m_one_of = L"error";
+        }
+    }
+
+    //void smops::ts_alt_filepath(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
+    //    auto toggle = sender.as<winrt::Microsoft::UI::Xaml::Controls::ToggleSwitch>(); 
+    //    bool is_active = toggle.IsOn(); 
+    //    if (is_active) {
+    //        m_alt_filtepath_active = true; 
+    //        reb_alt_file_path().IsEnabled(true); 
+    //    }
+    //    else {
+    //        m_alt_filtepath_active = false;
+    //        reb_alt_file_path().IsEnabled(false); 
+    //    }
+    //}
+
+    void smops::ts_alt_search_field(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
+        auto toggle = sender.as<winrt::Microsoft::UI::Xaml::Controls::ToggleSwitch>(); 
+        bool is_active = toggle.IsOn(); 
+        if (is_active) {
+            m_alt_search_field_active = true; 
+            tb_alt_search_field().IsEnabled(true);
+        }
+        else {
+            m_alt_search_field_active = false; 
+            tb_alt_search_field().IsEnabled(false);
+        }
+    }
+
+    void smops::search_field_on_change(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::TextChangedEventArgs const& args) {
+        auto text_box = sender.as<winrt::Microsoft::UI::Xaml::Controls::TextBox>(); 
+        m_alt_search_filter = text_box.Text();
+    }
 }
