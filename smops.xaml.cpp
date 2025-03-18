@@ -8,6 +8,7 @@
 #include <winrt/base.h>
 #include "App.xaml.h" 
 #include "unordered_map"
+#include "convertion_manager.h"
 
 
 using namespace winrt;
@@ -39,6 +40,9 @@ namespace winrt::App1::implementation
         json_parser& parser = App::GetJsonParser();
         std::unordered_map<std::string, std::vector<std::string>> smops_filter = parser.get_smops_filter();
         smops::build_treeview(smops_filter); 
+
+        convertion_manager& convert = App::GetConvertionManager(); 
+        OutputDebugString(L"Code lief bis hierhin\n"); 
          
     }
     
@@ -53,11 +57,6 @@ namespace winrt::App1::implementation
         else {
             return m_search_filter;
         }
-    }
-
-    void smops::btn_test_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
-        OutputDebugString(L"Button funktioniert\n"); 
-        smops::get_filter_type();
     }
 
     void smops::build_treeview(std::unordered_map<std::string, std::vector<std::string>> value_map) {

@@ -31,7 +31,6 @@
                     <RichEditBox x:Name="reb_alt_file_path" Height="200" Width="400" IsEnabled="False"/>
                 </StackPanel>
             </StackPanel>
-            <Button Content="Test-Button" x:Name="btn_test" Click="btn_test_click"/>
 
         </StackPanel>
     </Grid>
