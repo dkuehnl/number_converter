@@ -119,7 +119,8 @@ namespace winrt::App1::implementation
         
         return {
             {"type", winrt::to_string(m_one_of)},
-            {"field", winrt::to_string(m_search_filter)}
+            {"field", winrt::to_string(m_search_filter)},
+            {"external_file", "none"}
         };
     }
 }

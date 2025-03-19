@@ -8,9 +8,13 @@ void convertion_manager::register_page(data_callback callback) {
 	page = callback;
 }
 
-void convertion_manager::test_information_transfer(std::string values) {
-	std::wstring wvalues(values.begin(), values.end()); 
-	OutputDebugString(wvalues.c_str()); 
+void convertion_manager::test_information_transfer(std::vector<std::string> values) {
+	OutputDebugString(L"\n");
+	for (const auto& element : values) {
+		std::wstring wmsg(element.begin(), element.end()); 
+		OutputDebugString(wmsg.c_str()); 
+		OutputDebugString(L"\n");
+	}
 	if (page) {
 		auto data = page(); 
 		for (const auto& [key, value] : data) {

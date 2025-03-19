@@ -214,9 +214,7 @@ namespace winrt::App1::implementation
     }
 
     void MainWindow::btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
-        //std::vector<std::string> searched_values = m_csv_parser.get_specific_values(winrt::to_string(m_selected_header));
-        std::string searched_values = "Testvalue"; 
-        m_convert.print_test(); 
+        std::vector<std::string> searched_values = m_csv_parser.get_specific_values(m_values, m_headers, winrt::to_string(m_selected_header));
         m_convert.test_information_transfer(searched_values); 
     }
 

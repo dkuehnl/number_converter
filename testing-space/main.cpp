@@ -2,50 +2,77 @@
 #include <unordered_map>
 #include <fstream>
 #include <string>
+#include <algorithm>
 #include "./json.hpp"
+#include "./csv_parser.h"
 using json = nlohmann::json;
 
 int main() {
-    std::unordered_map<std::string, std::vector<std::string>> smops; 
-    std::vector<std::string> eolive; 
-    std::vector<std::string> eosight; 
 
-    std::string filename = "./smops_values.json"; 
-    std::ifstream file(filename); 
-    json data = json::parse(file);
+    CSVParser parser; 
+    std::string filepath = "./test.csv";
+    parser.load_file(filepath);
 
-    for (auto& [key, value] : data.items()) {
-        std::cout << "Program: " << key << std::endl; 
-        if (key == "smops") {
-            for (const auto& [inner_key, inner_value] : data[key].items()) {
-                std::cout << "\t" << inner_key << std::endl;
-                for (const auto& element : inner_value) {
-                    smops[inner_key].push_back(element.get<std::string>());
-                }
-            }
-        } else if (key == "eolive") {
-            for (const auto& element : value) {
-                eolive.push_back(element.get<std::string>());
-            }
-        } else if (key == "eosight") {
-            for (const auto& element : value) {
-                eosight.push_back(element.get<std::string>());
-            }
-        }
+    std::vector<std::string> header_test = parser.get_headers(',');
+    std::string searched_header = header_test[1];
+    
+    std::vector<std::vector<std::string>> values = parser.get_rows(',');
+    std::vector<std::string> searched_values = parser.get_specific_values(values, searched_header);
 
+    for (const auto& element : searched_values) {
+        std::cout << element << std::endl; 
     }
+    
 
-    for (const auto& [key, value] : smops) {
-        std::cout << key << std::endl; 
-    }
     return 0; 
 }
 
 
-// CSVParser parser; 
-// std::string filepath = "./test.csv";
-// parser.load_file(filepath);
+
 
 // for (const auto& element : value) {
 //     std::cout << "\t" << element.get<std::string>() << std::endl;
 // }
+
+
+// std::unordered_map<std::string, std::vector<std::string>> smops; 
+// std::vector<std::string> eolive; 
+// std::vector<std::string> eosight; 
+
+// std::string filename = "./smops_values.json"; 
+// std::ifstream file(filename); 
+// json data = json::parse(file);
+
+// for (auto& [key, value] : data.items()) {
+//     std::cout << "Program: " << key << std::endl; 
+//     if (key == "smops") {
+//         for (const auto& [inner_key, inner_value] : data[key].items()) {
+//             std::cout << "\t" << inner_key << std::endl;
+//             for (const auto& element : inner_value) {
+//                 smops[inner_key].push_back(element.get<std::string>());
+//             }
+//         }
+//     } else if (key == "eolive") {
+//         for (const auto& element : value) {
+//             eolive.push_back(element.get<std::string>());
+//         }
+//     } else if (key == "eosight") {
+//         for (const auto& element : value) {
+//             eosight.push_back(element.get<std::string>());
+//         }
+//     }
+
+// }
+
+// for (const auto& [key, value] : smops) {
+//     std::cout << key << std::endl; 
+// }
+
+    // auto counter = std::find(header_test.begin(), header_test.end(), searched_header);
+    // if (counter != header_test.end()) {
+    //     auto index = std::distance(header_test.begin(), counter);
+    //     std::cout << "Gefunden: " << index << std::endl; 
+    //     for (int i = 0; i < values.size(); i++){
+    //         std::cout << values[i][index] << std::endl; 
+    //     }
+    // } 

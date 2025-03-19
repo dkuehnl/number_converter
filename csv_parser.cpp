@@ -2,6 +2,7 @@
 #include "csv_parser.h"
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 #include <winrt/base.h>
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Storage.FileProperties.h>
@@ -39,7 +40,7 @@ std::vector<std::string> CSVparser::get_headers(const char delim) const {
 		return {};
 	}
 	return Split(m_lines.front(), delim);
-};
+}
 
 std::vector<std::vector<std::string>> CSVparser::get_rows(const char delim) const {
 	std::vector<std::vector<std::string>> rows; 
@@ -51,11 +52,22 @@ std::vector<std::vector<std::string>> CSVparser::get_rows(const char delim) cons
 		rows.push_back(Split(m_lines[i], delim));
 	}
 	return rows;
-};
+}
 
-//std::vector<std::string> CSVparser::get_specific_values(const std::string& colum_name) const {
-//};
-//
+std::vector<std::string> CSVparser::get_specific_values(
+	const std::vector<std::vector<std::string>>& rows, const std::vector<std::string>& headers, const std::string& searched_column) const {
+	std::vector<std::string> searched_values; 
+	auto index = CSVparser::get_index(headers, searched_column);
+	if (index < 0) {
+		return {};
+	}
+
+	for (size_t i = 0; i < rows.size(); i++) {
+		searched_values.push_back(rows[i][index]);
+	}
+	return searched_values;
+}
+
 std::vector<std::string> CSVparser::Split(const std::string& line, char delimiter) const {
 	std::vector<std::string> tokens; 
 	std::string token; 
@@ -68,11 +80,22 @@ std::vector<std::string> CSVparser::Split(const std::string& line, char delimite
 	}
 
 	return tokens;
-};
+}
 
 std::string CSVparser::Trim(const std::string& str) const {
 	size_t first = str.find_first_not_of(" \n\r\t");
 	if (first == std::string::npos) return ""; 
 	size_t last = str.find_last_not_of(" \n\r\t");
 	return str.substr(first, (last - first + 1));
+}
+
+int CSVparser::get_index(const std::vector<std::string>& headers, const std::string& searched_column) const {
+	auto counter = std::find(headers.begin(), headers.end(), searched_column);
+	if (counter != headers.end()) {
+		auto index = std::distance(headers.begin(), counter); 
+		return index; 
+	}
+	else {
+		return -1; 
+	}
 }
