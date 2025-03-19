@@ -107,6 +107,7 @@
     <Manifest Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="base_page.h" />
     <ClInclude Include="convertion_manager.h" />
     <ClInclude Include="csv_parser.h" />
     <ClInclude Include="eolive.xaml.h">

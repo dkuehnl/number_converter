@@ -49,6 +49,9 @@
     <ClInclude Include="convertion_manager.h">
       <Filter>converter</Filter>
     </ClInclude>
+    <ClInclude Include="base_page.h">
+      <Filter>converter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">

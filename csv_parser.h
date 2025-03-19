@@ -16,6 +16,6 @@ public:
 	std::vector<std::string> get_headers(const char delim) const;
 	std::string test_get_firstline(int i) const;
 	std::vector<std::vector<std::string>> get_rows(const char delim) const;
-	/*std::vector<std::string> get_specific_values(const std::string& colum_name) const; */
+	//std::vector<std::string> get_specific_values(const std::string& colum_name) const; 
 
 };

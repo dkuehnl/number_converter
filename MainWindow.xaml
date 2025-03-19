@@ -73,7 +73,7 @@
                     Message="Something went wrong buddy" 
                 />
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
-                    <Button Content="Convert" Margin="0,0,10,0" Width="100" x:Name="btn_convert" />    
+                    <Button Content="Convert" Margin="0,0,10,0" Width="100" x:Name="btn_convert" Click="btn_convert_click"/>    
                     <Button Content="Reset" Width="100" />
                 </StackPanel>
             </StackPanel>

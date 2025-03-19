@@ -6,6 +6,8 @@
 #include "smops.xaml.h"
 #include "eolive.xaml.h"
 #include "eosight.xaml.h"
+#include "convertion_manager.h"
+#include "App.xaml.h" 
 
 #include <iostream>
 #include <algorithm>
@@ -38,7 +40,7 @@ constexpr auto MAX_PREVIEW_VALUE = 10;
 
 namespace winrt::App1::implementation
 {
-    MainWindow::MainWindow() {
+    MainWindow::MainWindow() : m_convert(App::GetConvertionManager()) {
         this->InitializeComponent(); 
         _appWindow = this->AppWindow(); 
         _appWindow.Title(L"First Try for C++-Windows application");
@@ -209,6 +211,21 @@ namespace winrt::App1::implementation
         }
 
         message_window().IsOpen(true); 
+    }
+
+    void MainWindow::btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
+        //std::vector<std::string> searched_values = m_csv_parser.get_specific_values(winrt::to_string(m_selected_header));
+        std::string searched_values = "Testvalue"; 
+        m_convert.print_test(); 
+        m_convert.test_information_transfer(searched_values); 
+    }
+
+    std::map<std::string, std::string> MainWindow::get_data() {
+
+        return {
+            {"type", "dummy1"},
+            {"field", "dummy2"}
+        };
     }
 
 }

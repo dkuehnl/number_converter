@@ -1,14 +1,21 @@
 #pragma once
 #include <string>
-#include "smops.xaml.h"
-#include "MainWindow.xaml.h"
+#include <functional>
+#include <map>
 
 class convertion_manager
 {
-public: 
-	convertion_manager(std::string test_var); 
+public:
+
+	using data_callback = std::function<std::map<std::string, std::string>()>;
+
+	convertion_manager() = default;
+	void print_test();
+	void register_page(data_callback callback);
+	void test_information_transfer(std::string values);
 
 private: 
-
+	data_callback page;
+	std::string test = "Test"; 
 };
 

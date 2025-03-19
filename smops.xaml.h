@@ -3,10 +3,13 @@
 #include "smops.g.h"
 #include <json_parser.h>
 #include <winrt/Windows.Foundation.h>
+#include "convertion_manager.h"
+#include "base_page.h"
+
 
 namespace winrt::App1::implementation
 {
-    struct smops : smopsT<smops>
+    struct smops : smopsT<smops>, base_page
     {
         smops();
         int32_t MyProperty();
@@ -18,14 +21,12 @@ namespace winrt::App1::implementation
         void tv_element_selection_SChanged(winrt::Microsoft::UI::Xaml::Controls::TreeView const& sender, winrt::Microsoft::UI::Xaml::Controls::TreeViewSelectionChangedEventArgs const& args);
         //void ts_alt_filepath(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
 
+        std::map<std::string, std::string> get_data() override;
 
-        const hstring& get_filter_type() const;
-        const hstring& get_search_filter() const;
         //const hstring& set_direct_output() const;
     private:
-        std::shared_ptr<json_parser> m_json_parser;
+        convertion_manager& m_convert;
         hstring m_search_filter = L" ";
-        hstring m_alt_search_filter = L" ";
         hstring m_one_of = L"error"; 
         bool m_alt_search_field_active = false; 
  
