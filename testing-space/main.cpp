@@ -3,26 +3,29 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <map>
 #include "./json.hpp"
 #include "./csv_parser.h"
 using json = nlohmann::json;
 
 int main() {
 
-    CSVParser parser; 
-    std::string filepath = "./test.csv";
-    parser.load_file(filepath);
-
-    std::vector<std::string> header_test = parser.get_headers(',');
-    std::string searched_header = header_test[1];
+    CSVParser parser("./test.csv", ',');
+    std::vector<std::string> header = parser.get_headers(); 
     
-    std::vector<std::vector<std::string>> values = parser.get_rows(',');
-    std::vector<std::string> searched_values = parser.get_specific_values(values, searched_header);
-
-    for (const auto& element : searched_values) {
+    for (const auto& element : header) {
         std::cout << element << std::endl; 
     }
-    
+
+    std::vector<std::string> searched_values = parser.get_specific_values(header[1]);
+    for (const auto& element : searched_values) { 
+        std::cout << element << std::endl; 
+    }
+
+    std::map<std::string, unsigned int> statistic = parser.get_statistic(); 
+    for (const auto& [key, value] : statistic) {
+        std::cout << key << ": " << value << std::endl; 
+    }
 
     return 0; 
 }
