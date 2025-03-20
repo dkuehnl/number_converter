@@ -13,19 +13,19 @@ int main() {
     CSVParser parser("./test.csv", ',');
     std::vector<std::string> header = parser.get_headers(); 
     
-    for (const auto& element : header) {
-        std::cout << element << std::endl; 
-    }
+    // for (const auto& element : header) {
+    //     std::cout << element << std::endl; 
+    // }
 
     std::vector<std::string> searched_values = parser.get_specific_values(header[1]);
-    for (const auto& element : searched_values) { 
-        std::cout << element << std::endl; 
-    }
+    // for (const auto& element : searched_values) { 
+    //     std::cout << element << std::endl; 
+    // }
 
     std::map<std::string, unsigned int> statistic = parser.get_statistic(); 
-    for (const auto& [key, value] : statistic) {
-        std::cout << key << ": " << value << std::endl; 
-    }
+    // for (const auto& [key, value] : statistic) {
+    //     std::cout << key << ": " << value << std::endl; 
+    // }
 
     return 0; 
 }

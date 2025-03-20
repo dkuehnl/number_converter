@@ -63,10 +63,23 @@ std::vector<std::string> CSVParser::Split(const std::string& line) {
     std::vector<std::string> tokens; 
     std::string token; 
     std::istringstream token_stream(line); 
-    while (std::getline(token_stream, token, m_delim)) {
-        token = Trim(token); 
-        if (!token.empty()) {
-            tokens.push_back(token);
+    // while (std::getline(token_stream, token, m_delim)) {
+    //     // std::cout << token << std::endl; 
+    //     token = Trim(token); 
+    //     // std::cout << token << std::endl; 
+    //     if (!token.empty()) {
+    //         tokens.push_back(token);
+    //     }
+    // }
+    std::cout << token_stream.peek() << std::endl; 
+    while (token_stream.peek() != EOF) {
+        if (token_stream.peek() == m_delim) {
+            tokens.push_back("");
+            token_stream.get(); 
+        } else {
+            std::getline(token_stream, token, m_delim); 
+            std::cout << token << std::endl; 
+            tokens.push_back(Trim(token)); 
         }
     }
 
