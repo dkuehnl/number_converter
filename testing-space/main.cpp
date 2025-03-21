@@ -6,22 +6,26 @@
 #include <map>
 #include "./json.hpp"
 #include "./csv_parser.h"
+#include "./convertion_manager.h"
 using json = nlohmann::json;
 
 int main() {
 
     CSVParser parser("./test.csv", ',');
-    std::vector<std::string> header = parser.get_headers(); 
+    ConvertionManager convert; 
+    convert.register_page("smops");
     
-    // for (const auto& element : header) {
-    //     std::cout << element << std::endl; 
-    // }
+    std::vector<std::string> header = parser.get_headers(); 
+    convert.set_external_file(true); 
+    convert.set_filter_type("is one of"); 
+    convert.set_filter_value("reg_user_agent"); 
 
-    std::vector<std::string> searched_values = parser.get_specific_values(header[1]);
-    // for (const auto& element : searched_values) { 
-    //     std::cout << element << std::endl; 
-    // }
+    std::vector<std::string> searched_values = parser.get_specific_values(header[0]);
+    for (const auto& element : searched_values) { 
+        std::cout << element << std::endl; 
+    }
 
+    convert.convert(searched_values); 
     std::map<std::string, unsigned int> statistic = parser.get_statistic(); 
     // for (const auto& [key, value] : statistic) {
     //     std::cout << key << ": " << value << std::endl; 

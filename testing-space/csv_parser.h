@@ -25,6 +25,7 @@ class CSVParser {
         void extract_headers();
         void extract_rows(); 
         void remove_duplicates(std::vector<std::string>& vector); 
+        void drop_empty_cells(std::vector<std::string>& vector); 
 
         std::vector<std::string> Split(const std::string& line); 
         std::string Trim(const std::string& str);

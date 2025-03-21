@@ -63,22 +63,13 @@ std::vector<std::string> CSVParser::Split(const std::string& line) {
     std::vector<std::string> tokens; 
     std::string token; 
     std::istringstream token_stream(line); 
-    // while (std::getline(token_stream, token, m_delim)) {
-    //     // std::cout << token << std::endl; 
-    //     token = Trim(token); 
-    //     // std::cout << token << std::endl; 
-    //     if (!token.empty()) {
-    //         tokens.push_back(token);
-    //     }
-    // }
-    std::cout << token_stream.peek() << std::endl; 
     while (token_stream.peek() != EOF) {
         if (token_stream.peek() == m_delim) {
             tokens.push_back("");
-            token_stream.get(); 
+            token_stream.get();
+
         } else {
             std::getline(token_stream, token, m_delim); 
-            std::cout << token << std::endl; 
             tokens.push_back(Trim(token)); 
         }
     }
@@ -95,9 +86,8 @@ std::string CSVParser::Trim(const std::string& str) {
 
 int CSVParser::get_index(const std::vector<std::string>& headers, const std::string& searched_column) const {
     auto counter = std::find(headers.begin(), headers.end(), searched_column); 
-    if (counter != headers.end()) {
-        auto index = std::distance(headers.begin(), counter); 
-        return index; 
+    if (counter != headers.end()) { 
+        return static_cast<int>(std::distance(headers.begin(), counter)); 
     } else {
         return -1;
     }
@@ -112,10 +102,16 @@ const std::vector<std::string>& CSVParser::get_headers() const {
 }
 
 void CSVParser::remove_duplicates(std::vector<std::string>& vector) {
-    unsigned int values_before = vector.size(); 
+    std::size_t values_before = vector.size(); 
     std::sort(vector.begin(), vector.end());
     vector.erase(std::unique(vector.begin(), vector.end()), vector.end()); 
-    m_duplicates = values_before - vector.size(); 
+    m_duplicates = static_cast<unsigned int>(values_before - vector.size()); 
+}
+
+void CSVParser::drop_empty_cells(std::vector<std::string>& vector) {
+    vector.erase(std::remove_if(vector.begin(), vector.end(), [](const std::string& s) {
+        return s.empty();
+    }), vector.end()); 
 }
 
 std::vector<std::string> CSVParser::get_specific_values(const std::string& searched_column) {
@@ -126,10 +122,10 @@ std::vector<std::string> CSVParser::get_specific_values(const std::string& searc
     }
 
     for (size_t i = 0; i < m_rows.size(); i++) {
-        searched_values.push_back(m_rows[i][index]);
+        searched_values.push_back(m_rows[i][static_cast<std::size_t>(index)]);
     }
     remove_duplicates(searched_values);
-
+    drop_empty_cells(searched_values); 
     return searched_values;
 }
 

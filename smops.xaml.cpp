@@ -35,7 +35,8 @@ namespace winrt::App1::implementation
         this->Loaded({ this, &smops::OnLoaded });
         tb_alt_search_field().TextChanged({ this, &smops::search_field_on_change });
 
-        m_convert.register_page([this]() {return get_data(); });
+        //m_convert.register_page([this]() {return get_data(); });
+        
     }
 
     void smops::OnLoaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
@@ -43,6 +44,7 @@ namespace winrt::App1::implementation
         std::unordered_map<std::string, std::vector<std::string>> smops_filter = parser.get_smops_filter();
         smops::build_treeview(smops_filter); 
 
+        m_convert.register_page("smops");
         m_convert.print_test();
         OutputDebugString(L"Code lief bis hierhin\n");
     }
@@ -67,7 +69,7 @@ namespace winrt::App1::implementation
             if (sender.SelectedNodes().Size() > 0) {
                 auto selectedNode = sender.SelectedNodes().GetAt(0);
                 winrt::hstring node_text = winrt::unbox_value<winrt::hstring>(selectedNode.Content());
-                m_search_filter = node_text;
+                //m_search_filter = node_text;
             }
         }
     }
@@ -115,12 +117,12 @@ namespace winrt::App1::implementation
         m_search_filter = text_box.Text();
     }
 
-    std::map<std::string, std::string> smops::get_data() {
-        
-        return {
-            {"type", winrt::to_string(m_one_of)},
-            {"field", winrt::to_string(m_search_filter)},
-            {"external_file", "none"}
-        };
-    }
+    //std::map<std::string, std::string> smops::get_data() {
+    //    
+    //    return {
+    //        {"type", winrt::to_string(m_one_of)},
+    //        {"field", winrt::to_string(m_search_filter)},
+    //        {"external_file", "none"}
+    //    };
+    //}
 }

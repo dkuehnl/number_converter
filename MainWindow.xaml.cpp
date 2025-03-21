@@ -116,14 +116,15 @@ namespace winrt::App1::implementation
     winrt::Windows::Foundation::IAsyncAction MainWindow::display_file() {
         if (m_selected_file != nullptr) {
             if (m_selected_file.FileType() == L".csv") {
-                co_await m_csv_parser.load_file(m_selected_file);
-
                 char delim = winrt::to_string(m_selected_delim)[0];
                 data_output().Inlines().Clear(); 
-                m_headers = m_csv_parser.get_headers(delim);
+
+                m_parser = std::make_unique<CSVParser>(m_selected_file, delim); 
+                co_await m_parser->initialize(); 
                 
                 m_header_collection.Clear(); 
-                for (const std::string& headers : m_headers) {
+                std::vector<std::string> headers = m_parser->get_headers(); 
+                for (const std::string& headers : headers) {
                     m_header_collection.Append(winrt::to_hstring(headers)); 
                     auto header_text = winrt::Microsoft::UI::Xaml::Documents::Run(); 
                     auto bold = winrt::Microsoft::UI::Xaml::Documents::Bold(); 
@@ -134,14 +135,14 @@ namespace winrt::App1::implementation
                 cb_header().ItemsSource(m_header_collection); 
                 cb_header().SelectedIndex(0);
                 
-                m_values = m_csv_parser.get_rows(delim);
-                for (int i = 0; i < min(MAX_PREVIEW_VALUE, m_values.size()); i++) {
+                std::vector<std::vector<std::string>> values = m_parser->get_rows();
+                for (int i = 0; i < min(MAX_PREVIEW_VALUE, values.size()); i++) {
                     auto outer_text = winrt::Microsoft::UI::Xaml::Documents::Run(); 
                     outer_text.Text(L"\n");
                     data_output().Inlines().Append(outer_text);
-                    for (const auto& values : m_values[i]) {
+                    for (const auto& value : values[i]) {
                         auto inner_text = winrt::Microsoft::UI::Xaml::Documents::Run();
-                        inner_text.Text(winrt::to_hstring(values) + L"\t");
+                        inner_text.Text(winrt::to_hstring(value) + L"\t");
                         data_output().Inlines().Append(inner_text); 
                     }
                 }
@@ -153,7 +154,6 @@ namespace winrt::App1::implementation
         else {
             data_output().Text(L"No File selected"); 
         }
-        
     }
 
     void MainWindow::cb_delim_chg(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e) {
@@ -214,16 +214,16 @@ namespace winrt::App1::implementation
     }
 
     void MainWindow::btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
-        std::vector<std::string> searched_values = m_csv_parser.get_specific_values(m_values, m_headers, winrt::to_string(m_selected_header));
+        std::vector<std::string> searched_values = m_parser->get_specific_values(winrt::to_string(m_selected_header));
         m_convert.test_information_transfer(searched_values); 
     }
 
-    std::map<std::string, std::string> MainWindow::get_data() {
+    //std::map<std::string, std::string> MainWindow::get_data() {
 
-        return {
-            {"type", "dummy1"},
-            {"field", "dummy2"}
-        };
-    }
+    //    return {
+    //        {"type", "dummy1"},
+    //        {"field", "dummy2"}
+    //    };
+    //}
 
 }

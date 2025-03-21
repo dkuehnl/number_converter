@@ -2,6 +2,7 @@
 #include "csv_parser.h"
 #include <sstream>
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include <winrt/base.h>
 #include <winrt/Windows.Storage.h>
@@ -14,88 +15,163 @@ using namespace Windows::Storage;
 using namespace Windows::Storage::Streams;
 using namespace Windows::Foundation; 
 
-winrt::Windows::Foundation::IAsyncAction CSVparser::load_file(StorageFile const& file) {
-	hstring file_text = co_await FileIO::ReadTextAsync(file); 
-	std::string file_content = to_string(file_text); 
+//winrt::Windows::Foundation::IAsyncAction CSVparser::load_file(StorageFile const& file) {
+//	hstring file_text = co_await FileIO::ReadTextAsync(file); 
+//	std::string file_content = to_string(file_text); 
+//
+//	std::istringstream iss(file_content); 
+//	std::string line; 
+//	m_lines.clear(); 
+//	while (std::getline(iss, line)) {
+//		if (!line.empty()) {
+//			m_lines.push_back(line);
+//		}
+//	}
+//}
 
-	std::istringstream iss(file_content); 
-	std::string line; 
-	m_lines.clear(); 
-	while (std::getline(iss, line)) {
-		if (!line.empty()) {
-			m_lines.push_back(line);
-		}
-	}
+CSVParser::CSVParser(winrt::Windows::Storage::StorageFile const& file, const char& delim) : m_file(file), m_delim(delim) {
+	
 }
 
-std::string CSVparser::test_get_firstline(int i) const {
-	if (!m_lines.empty()) {
-		return m_lines[i]; 
-	}
-	return "empty lines";
+winrt::Windows::Foundation::IAsyncAction CSVParser::initialize() {
+    try {
+        co_await this->parse_file();
+        this->extract_headers();
+        this->extract_rows();
+    }
+    catch (const std::exception& e) {
+        m_error_msg = "Error while reading file: " + std::string(e.what());
+        m_error = true;
+    }
 }
 
-std::vector<std::string> CSVparser::get_headers(const char delim) const {
-	if (m_lines.empty()) {
-		return {};
-	}
-	return Split(m_lines.front(), delim);
+winrt::Windows::Foundation::IAsyncAction CSVParser::parse_file() {
+    try {
+        auto file_content = co_await winrt::Windows::Storage::FileIO::ReadTextAsync(m_file);
+        std::string content = winrt::to_string(file_content); 
+        
+        std::istringstream iss(content); 
+        std::string line;
+        while (std::getline(iss, line)) {
+            if (!line.empty()) {
+                m_lines.push_back(line);
+                m_parsed_lines++;
+            }
+            else {
+                m_empty_lines++;
+            }
+        }
+    }
+    catch (const winrt::hresult_error& e) {
+        throw std::runtime_error("Error reading file: " + winrt::to_string(m_file.Path()) + " (" + winrt::to_string(e.message()) + ")");
+    }
+
 }
 
-std::vector<std::vector<std::string>> CSVparser::get_rows(const char delim) const {
-	std::vector<std::vector<std::string>> rows; 
-	if (m_lines.size() < 2) {
-		return rows; 
-	}
-
-	for (size_t i = 1; i < m_lines.size(); i++) {
-		rows.push_back(Split(m_lines[i], delim));
-	}
-	return rows;
+void CSVParser::extract_headers() {
+    if (m_lines.empty()) {
+        m_headers = {};
+        return;
+    }
+    m_headers = Split(m_lines.front());
 }
 
-std::vector<std::string> CSVparser::get_specific_values(
-	const std::vector<std::vector<std::string>>& rows, const std::vector<std::string>& headers, const std::string& searched_column) const {
-	std::vector<std::string> searched_values; 
-	auto index = CSVparser::get_index(headers, searched_column);
-	if (index < 0) {
-		return {};
-	}
+void CSVParser::extract_rows() {
+    if (m_lines.size() < 2) {
+        m_rows = {};
+        return;
+    }
 
-	for (size_t i = 0; i < rows.size(); i++) {
-		searched_values.push_back(rows[i][index]);
-	}
-	return searched_values;
+    for (size_t i = 1; i < m_lines.size(); i++) {
+        m_rows.push_back(Split(m_lines[i]));
+    }
 }
 
-std::vector<std::string> CSVparser::Split(const std::string& line, char delimiter) const {
-	std::vector<std::string> tokens; 
-	std::string token; 
-	std::istringstream token_stream(line); 
-	while (std::getline(token_stream, token, delimiter)) {
-		token = Trim(token); 
-		if (!token.empty()) {
-			tokens.push_back(token);
-		}
-	}
+std::vector<std::string> CSVParser::Split(const std::string& line) {
+    std::vector<std::string> tokens;
+    std::string token;
+    std::istringstream token_stream(line);
+    while (token_stream.peek() != EOF) {
+        if (token_stream.peek() == m_delim) {
+            tokens.push_back("");
+            token_stream.get();
 
-	return tokens;
+        }
+        else {
+            std::getline(token_stream, token, m_delim);
+            tokens.push_back(Trim(token));
+        }
+    }
+
+    return tokens;
 }
 
-std::string CSVparser::Trim(const std::string& str) const {
-	size_t first = str.find_first_not_of(" \n\r\t");
-	if (first == std::string::npos) return ""; 
-	size_t last = str.find_last_not_of(" \n\r\t");
-	return str.substr(first, (last - first + 1));
+std::string CSVParser::Trim(const std::string& str) {
+    size_t first = str.find_first_not_of(" \n\r\t");
+    if (first == std::string::npos) return "";
+    size_t last = str.find_last_not_of(" \n\r\t");
+    return str.substr(first, (last - first + 1));
 }
 
-int CSVparser::get_index(const std::vector<std::string>& headers, const std::string& searched_column) const {
-	auto counter = std::find(headers.begin(), headers.end(), searched_column);
-	if (counter != headers.end()) {
-		auto index = std::distance(headers.begin(), counter); 
-		return index; 
-	}
-	else {
-		return -1; 
-	}
+int CSVParser::get_index(const std::vector<std::string>& headers, const std::string& searched_column) const {
+    auto counter = std::find(headers.begin(), headers.end(), searched_column);
+    if (counter != headers.end()) {
+        return static_cast<int>(std::distance(headers.begin(), counter));
+    }
+    else {
+        return -1;
+    }
+}
+
+const std::vector<std::vector<std::string>>& CSVParser::get_rows() const {
+    return m_rows;
+}
+
+const std::vector<std::string>& CSVParser::get_headers() const {
+    return m_headers;
+}
+
+void CSVParser::remove_duplicates(std::vector<std::string>& vector) {
+    std::size_t values_before = vector.size();
+    std::sort(vector.begin(), vector.end());
+    vector.erase(std::unique(vector.begin(), vector.end()), vector.end());
+    m_duplicates = static_cast<unsigned int>(values_before - vector.size());
+}
+
+void CSVParser::drop_empty_cells(std::vector<std::string>& vector) {
+    vector.erase(std::remove_if(vector.begin(), vector.end(), [](const std::string& s) {
+        return s.empty();
+        }), vector.end());
+}
+
+std::vector<std::string> CSVParser::get_specific_values(const std::string& searched_column) {
+    std::vector<std::string> searched_values;
+    auto index = get_index(m_headers, searched_column);
+    if (index < 0) {
+        return {};
+    }
+
+    for (size_t i = 0; i < m_rows.size(); i++) {
+        searched_values.push_back(m_rows[i][static_cast<std::size_t>(index)]);
+    }
+    remove_duplicates(searched_values);
+    drop_empty_cells(searched_values);
+    return searched_values;
+}
+
+const bool& CSVParser::is_valid() const {
+    return m_error;
+}
+
+const std::string& CSVParser::get_error() const {
+    return m_error_msg;
+}
+
+std::map<std::string, unsigned int> CSVParser::get_statistic() {
+    return {
+        {"parsed", m_parsed_lines},
+        {"empty", m_empty_lines},
+        {"duplicates", m_duplicates},
+        {"total", m_empty_lines + m_parsed_lines}
+    };
 }

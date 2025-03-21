@@ -21,7 +21,7 @@ namespace winrt::App1::implementation
         void tv_element_selection_SChanged(winrt::Microsoft::UI::Xaml::Controls::TreeView const& sender, winrt::Microsoft::UI::Xaml::Controls::TreeViewSelectionChangedEventArgs const& args);
         //void ts_alt_filepath(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
 
-        std::map<std::string, std::string> get_data() override;
+         //std::string get_data() override;
 
         //const hstring& set_direct_output() const;
     private:

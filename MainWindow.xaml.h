@@ -1,11 +1,13 @@
 #pragma once
 
+#include <memory>
 #include "MainWindow.g.h"
 #include "csv_parser.h"
 #include "json_parser.h"
 #include "convertion_manager.h"
 #include <winrt/Windows.Foundation.h>
 #include "base_page.h"
+
 
 namespace winrt::App1::implementation
 {
@@ -22,18 +24,16 @@ namespace winrt::App1::implementation
         void handle_infobar(const std::string& title, const hstring& message, const std::string& severity); 
         void btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args); 
 
-        std::map<std::string, std::string> get_data() override;
+        //std::map<std::string, std::string> get_data() override;
 
     private:
         convertion_manager& m_convert;
         winrt::Microsoft::UI::Windowing::AppWindow _appWindow{ nullptr };
         winrt::Microsoft::UI::Windowing::AppWindowTitleBar _titleBar{ nullptr };
         winrt::Windows::Storage::StorageFile m_selected_file{ nullptr };
-        CSVparser m_csv_parser; 
+        std::unique_ptr<CSVParser> m_parser; 
         hstring m_selected_delim = L",";
-        std::vector<std::string> m_headers;
         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_header_collection{winrt::single_threaded_observable_vector<winrt::hstring>()};
-        std::vector<std::vector<std::string>> m_values;
         winrt::Windows::Foundation::IAsyncAction display_file();
         hstring m_selected_header = L" ";
     };
