@@ -34,9 +34,6 @@ namespace winrt::App1::implementation
         InitializeComponent(); 
         this->Loaded({ this, &smops::OnLoaded });
         tb_alt_search_field().TextChanged({ this, &smops::search_field_on_change });
-
-        //m_convert.register_page([this]() {return get_data(); });
-        
     }
 
     void smops::OnLoaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
@@ -45,8 +42,6 @@ namespace winrt::App1::implementation
         smops::build_treeview(smops_filter); 
 
         m_convert.register_page("smops");
-        m_convert.print_test();
-        OutputDebugString(L"Code lief bis hierhin\n");
     }
 
     void smops::build_treeview(std::unordered_map<std::string, std::vector<std::string>> value_map) {
@@ -69,21 +64,23 @@ namespace winrt::App1::implementation
             if (sender.SelectedNodes().Size() > 0) {
                 auto selectedNode = sender.SelectedNodes().GetAt(0);
                 winrt::hstring node_text = winrt::unbox_value<winrt::hstring>(selectedNode.Content());
-                //m_search_filter = node_text;
+                m_search_filter = node_text;
+                m_convert.set_filter_value(winrt::to_string(m_search_filter)); 
             }
         }
     }
 
     void smops::rb_one_of_checked(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
         if (one_of_button().IsChecked().GetBoolean()) {
-            m_one_of = L"is one of";
+            m_filter_type = L"is one of";
         }
         else if (not_one_of_button().IsChecked().GetBoolean()) {
-            m_one_of = L"is not one of";
+            m_filter_type = L"is not one of";
         }
         else {
-            m_one_of = L"error";
+            m_filter_type = L"error";
         }
+        m_convert.set_filter_type(winrt::to_string(m_filter_type));
     }
 
     //void smops::ts_alt_filepath(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
@@ -115,14 +112,6 @@ namespace winrt::App1::implementation
     void smops::search_field_on_change(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::TextChangedEventArgs const& args) {
         auto text_box = sender.as<winrt::Microsoft::UI::Xaml::Controls::TextBox>(); 
         m_search_filter = text_box.Text();
+        m_convert.set_filter_value(winrt::to_string(m_search_filter)); 
     }
-
-    //std::map<std::string, std::string> smops::get_data() {
-    //    
-    //    return {
-    //        {"type", winrt::to_string(m_one_of)},
-    //        {"field", winrt::to_string(m_search_filter)},
-    //        {"external_file", "none"}
-    //    };
-    //}
 }

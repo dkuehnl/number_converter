@@ -1,23 +1,29 @@
 #pragma once
 #include <string>
 #include <functional>
-#include <map>
+#include <vector>
 
-class convertion_manager
+class ConvertionManager
 {
 public:
-
-	//using data_callback = std::function<std::map<std::string, std::string>()>;
-
-	convertion_manager() = default;
-	void print_test();
-	void register_page(std::string page); 
-	//void register_page(data_callback callback);
-	void test_information_transfer(std::vector<std::string> values);
+    ConvertionManager() = default;
+    int register_page(std::string registered_page);
+    //int convert(std::vector<std::string> values);
+    int convert(); 
+    int set_filter_type(std::string filter_type);
+    int set_filter_value(std::string filter_value);
+    int set_external_file(bool external);
 
 private: 
-	//data_callback page;
-	std::string m_registered_page;
-	std::string test = "Test"; 
+    int check_input_valid();
+    void convert_to_smops(std::vector<std::string> values);
+    void convert_to_eolive(std::vector<std::string> values);
+    void convert_to_eosight(std::vector<std::string> values);
+    std::string m_registered_page;
+    std::string m_filter_type;
+    std::string m_filter_value;
+    bool m_external_file = true;
+
+    std::string m_error_msg;
 };
 

@@ -6,12 +6,11 @@
 #include "json_parser.h"
 #include "convertion_manager.h"
 #include <winrt/Windows.Foundation.h>
-#include "base_page.h"
 
 
 namespace winrt::App1::implementation
 {
-    struct MainWindow : MainWindowT<MainWindow>, base_page
+    struct MainWindow : MainWindowT<MainWindow>
     {
         MainWindow();
         int32_t MyProperty();
@@ -22,12 +21,10 @@ namespace winrt::App1::implementation
         void cb_delim_chg(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e);
         void cb_header_chg(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e);
         void handle_infobar(const std::string& title, const hstring& message, const std::string& severity); 
-        void btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args); 
-
-        //std::map<std::string, std::string> get_data() override;
+        void btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
 
     private:
-        convertion_manager& m_convert;
+        ConvertionManager& m_convert;
         winrt::Microsoft::UI::Windowing::AppWindow _appWindow{ nullptr };
         winrt::Microsoft::UI::Windowing::AppWindowTitleBar _titleBar{ nullptr };
         winrt::Windows::Storage::StorageFile m_selected_file{ nullptr };
