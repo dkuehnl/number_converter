@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "convertion_manager.h"
+#include "file_handling.h"
 #include <string>
 #include <windows.h>
 
@@ -15,28 +16,28 @@ int ConvertionManager::register_page(std::string registered_page) {
 	}
 }
 
-//int ConvertionManager::convert(std::vector<std::string> values) {
-int ConvertionManager::convert() {
+int ConvertionManager::convert(std::vector<std::string> values) {
+//int ConvertionManager::convert() {
     OutputDebugStringA(m_filter_value.c_str());
     OutputDebugString(L"\n"); 
     OutputDebugStringA(m_filter_type.c_str()); 
     OutputDebugString(L"\n"); 
 
-    //if (values.size() == 0) {
-    //    return 1;
-    //}
-    //if (check_input_valid() == 1) {
-    //    return 1;
-    //}
-    //if (m_registered_page == "smops") {
-    //    convert_to_smops(values);
-    //}
-    //else if (m_registered_page == "eolive") {
-    //    convert_to_eolive(values);
-    //}
-    //else if (m_registered_page == "eosight") {
-    //    convert_to_eosight(values);
-    //}
+    if (values.size() == 0) {
+        return 1;
+    }
+    if (check_input_valid() == 1) {
+        return 1;
+    }
+    if (m_registered_page == "smops") {
+        convert_to_smops(values);
+    }
+    else if (m_registered_page == "eolive") {
+        convert_to_eolive(values);
+    }
+    else if (m_registered_page == "eosight") {
+        convert_to_eosight(values);
+    }
 
     return 0;
 }

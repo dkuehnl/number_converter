@@ -7,6 +7,7 @@
 #include "eolive.xaml.h"
 #include "eosight.xaml.h"
 #include "convertion_manager.h"
+#include "file_handling.h"
 #include "App.xaml.h" 
 
 #include <iostream>
@@ -86,31 +87,22 @@ namespace winrt::App1::implementation
 
     winrt::fire_and_forget MainWindow::click_file_picker(IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
         auto lifetime = get_strong(); 
+        file_picker().IsEnabled(false);
 
-        file_picker().IsEnabled(false); 
-
-        Windows::Storage::Pickers::FileOpenPicker open_picker; 
-        auto window_native{ this->m_inner.as<::IWindowNative>() };
+        auto window_native{ this->m_inner.as<::IWindowNative >() };
         HWND hWnd{ 0 };
-        window_native->get_WindowHandle(&hWnd); 
+        window_native->get_WindowHandle(&hWnd);
 
-        auto picker_interop = open_picker.as<::IInitializeWithWindow>();
-        winrt::check_hresult(picker_interop->Initialize(hWnd));
-
-        open_picker.ViewMode(PickerViewMode::Thumbnail); 
-        open_picker.SuggestedStartLocation(PickerLocationId::DocumentsLibrary);
-        open_picker.FileTypeFilter().ReplaceAll({ L".csv", L".xls", L".xlsx" });
-        StorageFile file = co_await open_picker.PickSingleFileAsync(); 
+        winrt::Windows::Storage::StorageFile file = co_await FileHandler::pick_file(hWnd); 
         if (file != nullptr) {
-            file_picker_output().Text(file.Name()); 
-            file_picker().IsEnabled(true); 
+            file_picker_output().Text(file.Name());
             m_selected_file = file;
             co_await display_file();
         }
         else {
-            file_picker_output().Text(L"No File selected"); 
-            file_picker().IsEnabled(true); 
+            file_picker_output().Text(L"No File selected");
         }
+        file_picker().IsEnabled(true);
     }
 
     winrt::Windows::Foundation::IAsyncAction MainWindow::display_file() {

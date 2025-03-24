@@ -8,8 +8,8 @@ class ConvertionManager
 public:
     ConvertionManager() = default;
     int register_page(std::string registered_page);
-    //int convert(std::vector<std::string> values);
-    int convert(); 
+    int convert(std::vector<std::string> values);
+    //int convert(); 
     int set_filter_type(std::string filter_type);
     int set_filter_value(std::string filter_value);
     int set_external_file(bool external);

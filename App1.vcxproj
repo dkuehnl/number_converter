@@ -107,7 +107,6 @@
     <Manifest Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="base_page.h" />
     <ClInclude Include="convertion_manager.h" />
     <ClInclude Include="csv_parser.h" />
     <ClInclude Include="eolive.xaml.h">
@@ -118,6 +117,7 @@
       <DependentUpon>eosight.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
+    <ClInclude Include="file_handling.h" />
     <ClInclude Include="json_parser.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
@@ -157,6 +157,7 @@
       <DependentUpon>eosight.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
+    <ClCompile Include="file_handling.cpp" />
     <ClCompile Include="json_parser.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

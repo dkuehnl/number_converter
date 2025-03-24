@@ -10,8 +10,8 @@ using namespace Microsoft::UI::Xaml;
 
 namespace winrt::App1::implementation
 {
-    json_parser App::m_json_parser{ "C:\\Users\\dkueh\\source\\repos\\dkuehnl\\number_converter\\testing-space\\smops_values.json" }; //Laptop-IDE
-    //json_parser App::m_json_parser{ "A:\\Workspace\\Programming\\cpp\\number_converter\\testing-space\\smops_values.json" };
+    //json_parser App::m_json_parser{ "C:\\Users\\dkueh\\source\\repos\\dkuehnl\\number_converter\\testing-space\\smops_values.json" }; //Laptop-IDE
+    json_parser App::m_json_parser{ "A:\\Workspace\\Programming\\cpp\\number_converter\\testing-space\\smops_values.json" };
     ConvertionManager App::m_convertion_manager;
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
