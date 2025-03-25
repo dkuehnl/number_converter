@@ -2,6 +2,7 @@
 #include "convertion_manager.h"
 #include "file_handling.h"
 #include <string>
+#include <sstream>
 #include <windows.h>
 
 
@@ -16,7 +17,7 @@ int ConvertionManager::register_page(std::string registered_page) {
 	}
 }
 
-int ConvertionManager::convert(std::vector<std::string> values) {
+int ConvertionManager::convert(winrt::hstring source_file, std::vector<std::string> values) {
 //int ConvertionManager::convert() {
     OutputDebugStringA(m_filter_value.c_str());
     OutputDebugString(L"\n"); 
@@ -30,7 +31,7 @@ int ConvertionManager::convert(std::vector<std::string> values) {
         return 1;
     }
     if (m_registered_page == "smops") {
-        convert_to_smops(values);
+        convert_to_smops(source_file, values);
     }
     else if (m_registered_page == "eolive") {
         convert_to_eolive(values);
@@ -64,16 +65,16 @@ int ConvertionManager::check_input_valid() {
     return 0;
 }
 
-void ConvertionManager::convert_to_smops(std::vector<std::string> values) {
-    /*std::ofstream outfile("./test_output.txt");
+void ConvertionManager::convert_to_smops(winrt::hstring source_file, std::vector<std::string> values) {
+    std::wstringstream wss;
     if (m_filter_type == "is one of") {
-        outfile << "{\n"
+        wss << "{\n"
             << "\"query\": {\n"
             << "\"bool\": {\n"
             << "\"should\": [\n";
     }
     else if (m_filter_type == "is not one of") {
-        outfile << "{\n"
+        wss << "{\n"
             << "\"query\": {\n"
             << "\"bool\": {\n"
             << "\"must_not\": [\n";
@@ -84,33 +85,40 @@ void ConvertionManager::convert_to_smops(std::vector<std::string> values) {
     }
 
     for (std::size_t i = 0; i < values.size() - 1; i++) {
-        outfile << "{\n"
+        std::wstring w_value(values[i].begin(), values[i].end()); 
+        std::wstring w_filter(m_filter_value.begin(), m_filter_value.end()); 
+        wss << "{\n"
             << "\"match_phrase\": {\n"
             << "\""
-            << m_filter_value
+            << w_filter
             << "\": \""
-            << values[i]
+            << w_value
             << "\"\n"
                 << "}\n"
                 << "},\n";
     }
-    outfile << "{\n"
+
+    std::wstring w_last_value(values.back().begin(), values.back().end()); 
+    std::wstring w_filter(m_filter_value.begin(), m_filter_value.end()); 
+    wss << "{\n"
         << "\"match_phrase\": {\n"
         << "\""
-        << m_filter_value
+        << w_filter
         << "\": \""
-        << values.back()
+        << w_last_value
         << "\"\n"
         << "}\n"
         << "}\n";
 
-    outfile << "],\n"
+    wss << "],\n"
         << "\"minimum_should_match\": 1\n"
         << "}\n"
         << "}\n"
         << "}";
 
-    outfile.close();*/
+    std::wstring content = wss.str(); 
+    auto async_write = FileHandler::write_file(source_file, content)
+
 }
 
 void ConvertionManager::convert_to_eolive(std::vector<std::string> values) {

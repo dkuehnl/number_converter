@@ -2,13 +2,14 @@
 #include <string>
 #include <functional>
 #include <vector>
+#include <winrt/base.h>
 
 class ConvertionManager
 {
 public:
     ConvertionManager() = default;
     int register_page(std::string registered_page);
-    int convert(std::vector<std::string> values);
+    int convert(winrt::hstring source_file, std::vector<std::string> values);
     //int convert(); 
     int set_filter_type(std::string filter_type);
     int set_filter_value(std::string filter_value);
@@ -16,7 +17,7 @@ public:
 
 private: 
     int check_input_valid();
-    void convert_to_smops(std::vector<std::string> values);
+    void convert_to_smops(winrt::hstring source_file, std::vector<std::string> values);
     void convert_to_eolive(std::vector<std::string> values);
     void convert_to_eosight(std::vector<std::string> values);
     std::string m_registered_page;
