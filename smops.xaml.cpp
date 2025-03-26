@@ -10,7 +10,6 @@
 #include "unordered_map"
 #include "convertion_manager.h"
 
-
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
 using namespace Microsoft::UI::Xaml::Controls;
@@ -41,7 +40,7 @@ namespace winrt::App1::implementation
         std::unordered_map<std::string, std::vector<std::string>> smops_filter = parser.get_smops_filter();
         smops::build_treeview(smops_filter); 
 
-        m_convert.register_page("smops");
+        m_convert.register_page("SMOPS");
     }
 
     void smops::build_treeview(std::unordered_map<std::string, std::vector<std::string>> value_map) {

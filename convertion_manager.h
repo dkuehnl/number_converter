@@ -18,8 +18,8 @@ public:
 private: 
     int check_input_valid();
     winrt::Windows::Foundation::IAsyncAction convert_to_smops(winrt::hstring source_file, std::vector<std::string> values);
-    void convert_to_eolive(std::vector<std::string> values);
-    void convert_to_eosight(std::vector<std::string> values);
+    winrt::Windows::Foundation::IAsyncAction convert_to_eolive(winrt::hstring source_file, std::vector<std::string> values);
+    winrt::Windows::Foundation::IAsyncAction convert_to_eosight(winrt::hstring source_file, std::vector<std::string> values);
     std::string m_registered_page;
     std::string m_filter_type;
     std::string m_filter_value;

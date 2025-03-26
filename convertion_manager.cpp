@@ -30,14 +30,14 @@ winrt::Windows::Foundation::IAsyncOperation<int> ConvertionManager::convert(winr
     if (check_input_valid() == 1) {
         co_return 1;
     }
-    if (m_registered_page == "smops") {
+    if (m_registered_page == "SMOPS") {
         co_await convert_to_smops(source_file, values);
     }
-    else if (m_registered_page == "eolive") {
-        convert_to_eolive(values);
+    else if (m_registered_page == "eoLive") {
+        co_await convert_to_eolive(source_file, values);
     }
-    else if (m_registered_page == "eosight") {
-        convert_to_eosight(values);
+    else if (m_registered_page == "eoSight") {
+        co_await convert_to_eosight(source_file, values);
     }
 
     co_return 0;
@@ -81,7 +81,7 @@ winrt::Windows::Foundation::IAsyncAction ConvertionManager::convert_to_smops(win
     }
     else {
         m_error_msg = "Unknown filter-type";
-        return;
+        co_return;
     }
 
     for (std::size_t i = 0; i < values.size() - 1; i++) {
@@ -117,14 +117,76 @@ winrt::Windows::Foundation::IAsyncAction ConvertionManager::convert_to_smops(win
         << "}";
 
     std::wstring content = wss.str(); 
-    co_await FileHandler::write_file(source_file, L"SMOPS", content);
+    co_await FileHandler::write_file(source_file, std::wstring(m_registered_page.begin(), m_registered_page.end()), content);
     co_return;
 }
 
-void ConvertionManager::convert_to_eolive(std::vector<std::string> values) {
+winrt::Windows::Foundation::IAsyncAction ConvertionManager::convert_to_eolive(winrt::hstring source_file, std::vector<std::string> values) {
+    std::wstringstream wss; 
+    std::wstring w_filter(m_filter_value.begin(), m_filter_value.end());
+    if (m_filter_type == "begins") {
+        wss << "["
+            << w_filter
+            << "] begins (";
+    }
 
+    for (std::size_t i = 0; i < values.size() - 1; i++) {
+        std::wstring w_value(values[i].begin(), values[i].end());
+        wss << "\""
+            << w_value
+            << "\", ";
+    }
+    std::wstring w_last_value(values.back().begin(), values.back().end());
+    wss << "\""
+        << w_last_value
+        << "\")";
+
+    std::wstring content = wss.str();
+    co_await FileHandler::write_file(source_file, std::wstring(m_registered_page.begin(), m_registered_page.end()), content);
+    co_return;
 }
 
-void ConvertionManager::convert_to_eosight(std::vector<std::string> values) {
+winrt::Windows::Foundation::IAsyncAction ConvertionManager::convert_to_eosight(winrt::hstring source_file, std::vector<std::string> values) {
+    std::wstringstream wss; 
+    std::wstring w_filter(m_filter_value.begin(), m_filter_value.end());
+    if (m_filter_type == "contains") {
+        for (std::size_t i = 0; i < values.size() - 1; i++) {
+            std::wstring w_value(values[i].begin(), values[i].end());
+            wss << "CONTAINS(["
+                << w_filter
+                << "], \""
+                << w_value
+                << "\") or ";
+        }
+        std::wstring w_last_value(values.back().begin(), values.back().end());
+        wss << "CONTAINS(["
+            << w_filter
+            << "], \""
+            << w_last_value
+            << "\")";
 
+    }
+    else if (m_filter_type == "equal") {
+        for (std::size_t i = 0; i < values.size() - 1; i++) {
+            std::wstring w_value(values[i].begin(), values[i].end()); 
+            wss << "["
+                << w_filter
+                << "] = \""
+                << w_value
+                << "\" or ";
+        }
+        std::wstring w_last_value(values.back().begin(), values.back().end());
+        wss << "["
+            << w_filter
+            << "] = \""
+            << w_last_value
+            << "\"";
+    }
+    else {
+        co_return; 
+    }
+
+    std::wstring content = wss.str();
+    co_await FileHandler::write_file(source_file, std::wstring(m_registered_page.begin(), m_registered_page.end()), content);
+    co_return;
 }
