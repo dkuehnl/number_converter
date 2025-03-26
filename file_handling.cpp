@@ -2,6 +2,7 @@
 #include "file_handling.h"
 
 #include <filesystem>
+#include <winrt/base.h>
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Storage.Pickers.h>
 #include <winrt/Windows.Foundation.h>
@@ -22,15 +23,32 @@ namespace FileHandler {
   
     }
 
-    winrt::Windows::Foundation::IAsyncAction write_file(const winrt::hstring& source_file, const std::wstring& content) {
+    winrt::Windows::Foundation::IAsyncAction write_file(const winrt::hstring& source_file, const std::wstring& destination_system, const std::wstring& content) {
+        winrt::hstring new_filename = build_new_filename(source_file, destination_system); 
+        winrt::hstring folder_path = get_folder_path(source_file); 
+
+        auto folder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(folder_path);
+        auto new_file = co_await folder.CreateFileAsync(new_filename + L".txt", winrt::Windows::Storage::CreationCollisionOption::GenerateUniqueName);
+        co_await winrt::Windows::Storage::FileIO::WriteTextAsync(new_file, content);
+        co_return;
+    }
+
+    winrt::hstring build_new_filename(const winrt::hstring& source_file, const std::wstring& destination_system) {
+        std::filesystem::path pathObj(source_file.c_str());
+        std::wstring w_old_filename = pathObj.stem().wstring();
+
+        std::wstring w_new_filename = w_old_filename + L"_" + destination_system + L"_converted";
+        winrt::hstring new_filename(w_new_filename.c_str());
+        return new_filename;
+    }
+
+    winrt::hstring get_folder_path(const winrt::hstring& source_file) {
         std::wstring wmsg(source_file.begin(), source_file.end());
         std::filesystem::path fs_path(wmsg);
 
-        std::wstring folder_path = fs_path.parent_path().wstring();
-        auto folder = co_await winrt::Windows::Storage::StorageFolder::GetFolderFromPathAsync(winrt::hstring(folder_path));
-        auto new_file = co_await folder.CreateFileAsync(L"test_file.txt", winrt::Windows::Storage::CreationCollisionOption::GenerateUniqueName);
-        co_await winrt::Windows::Storage::FileIO::WriteTextAsync(new_file, content);
-        co_return;
+        std::wstring w_folder_path = fs_path.parent_path().wstring();        
+        winrt::hstring folder_path(w_folder_path.c_str());
+        return folder_path;
     }
 
 }

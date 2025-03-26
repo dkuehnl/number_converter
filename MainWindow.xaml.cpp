@@ -206,9 +206,9 @@ namespace winrt::App1::implementation
         message_window().IsOpen(true); 
     }
 
-    void MainWindow::btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
-        //std::vector<std::string> searched_values = m_parser->get_specific_values(winrt::to_string(m_selected_header));
-        //m_convert.convert(); 
+    winrt::fire_and_forget MainWindow::btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
+        std::vector<std::string> searched_values = m_parser->get_specific_values(winrt::to_string(m_selected_header));
+        co_await m_convert.convert(m_selected_file.Path(), searched_values); 
 
     }
 

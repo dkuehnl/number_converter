@@ -1,0 +1,29 @@
+{
+"query": {
+"bool": {
+"should": [
+{
+"match_phrase": {
+"reg_common_calling_party_number": "491995002614654"
+}
+},
+{
+"match_phrase": {
+"reg_common_calling_party_number": "4919952614654"
+}
+},
+{
+"match_phrase": {
+"reg_common_calling_party_number": "49687543573"
+}
+},
+{
+"match_phrase": {
+"reg_common_calling_party_number": "49856873437"
+}
+}
+],
+"minimum_should_match": 1
+}
+}
+}

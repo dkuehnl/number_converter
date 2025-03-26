@@ -17,7 +17,7 @@ int ConvertionManager::register_page(std::string registered_page) {
 	}
 }
 
-int ConvertionManager::convert(winrt::hstring source_file, std::vector<std::string> values) {
+winrt::Windows::Foundation::IAsyncOperation<int> ConvertionManager::convert(winrt::hstring source_file, std::vector<std::string> values) {
 //int ConvertionManager::convert() {
     OutputDebugStringA(m_filter_value.c_str());
     OutputDebugString(L"\n"); 
@@ -25,13 +25,13 @@ int ConvertionManager::convert(winrt::hstring source_file, std::vector<std::stri
     OutputDebugString(L"\n"); 
 
     if (values.size() == 0) {
-        return 1;
+        co_return 1;
     }
     if (check_input_valid() == 1) {
-        return 1;
+        co_return 1;
     }
     if (m_registered_page == "smops") {
-        convert_to_smops(source_file, values);
+        co_await convert_to_smops(source_file, values);
     }
     else if (m_registered_page == "eolive") {
         convert_to_eolive(values);
@@ -40,7 +40,7 @@ int ConvertionManager::convert(winrt::hstring source_file, std::vector<std::stri
         convert_to_eosight(values);
     }
 
-    return 0;
+    co_return 0;
 }
 
 int ConvertionManager::set_filter_type(std::string filter_type) {
@@ -65,7 +65,7 @@ int ConvertionManager::check_input_valid() {
     return 0;
 }
 
-void ConvertionManager::convert_to_smops(winrt::hstring source_file, std::vector<std::string> values) {
+winrt::Windows::Foundation::IAsyncAction ConvertionManager::convert_to_smops(winrt::hstring source_file, std::vector<std::string> values) {
     std::wstringstream wss;
     if (m_filter_type == "is one of") {
         wss << "{\n"
@@ -117,8 +117,8 @@ void ConvertionManager::convert_to_smops(winrt::hstring source_file, std::vector
         << "}";
 
     std::wstring content = wss.str(); 
-    auto async_write = FileHandler::write_file(source_file, content)
-
+    co_await FileHandler::write_file(source_file, L"SMOPS", content);
+    co_return;
 }
 
 void ConvertionManager::convert_to_eolive(std::vector<std::string> values) {
