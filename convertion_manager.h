@@ -10,7 +10,7 @@ public:
     ConvertionManager() = default;
     int register_page(std::string registered_page);
     winrt::Windows::Foundation::IAsyncOperation<int> convert(winrt::hstring source_file, std::vector<std::string> values);
-    //int convert(); 
+    std::string get_error_msg(); 
     int set_filter_type(std::string filter_type);
     int set_filter_value(std::string filter_value);
     int set_external_file(bool external);

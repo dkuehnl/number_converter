@@ -7,7 +7,7 @@
 
 
 int ConvertionManager::register_page(std::string registered_page) {
-	if (registered_page == "smops") {
+	if (registered_page == "SMOPS") {
 		m_registered_page = registered_page;
 		return 0;
 	}
@@ -18,27 +18,35 @@ int ConvertionManager::register_page(std::string registered_page) {
 }
 
 winrt::Windows::Foundation::IAsyncOperation<int> ConvertionManager::convert(winrt::hstring source_file, std::vector<std::string> values) {
-//int ConvertionManager::convert() {
-    OutputDebugStringA(m_filter_value.c_str());
-    OutputDebugString(L"\n"); 
-    OutputDebugStringA(m_filter_type.c_str()); 
-    OutputDebugString(L"\n"); 
-
     if (values.size() == 0) {
+        m_error_msg = "No valid values found to convert";
         co_return 1;
     }
     if (check_input_valid() == 1) {
+        m_error_msg = "No valid filter-value available"; 
         co_return 1;
     }
-    if (m_registered_page == "SMOPS") {
-        co_await convert_to_smops(source_file, values);
+
+    try {
+        if (m_registered_page == "SMOPS") {
+            co_await convert_to_smops(source_file, values);
+        }
+        else if (m_registered_page == "eoLive") {
+            co_await convert_to_eolive(source_file, values);
+        }
+        else if (m_registered_page == "eoSight") {
+            co_await convert_to_eosight(source_file, values);
+        }
+        else {
+            m_error_msg = "registered Page not found";
+            co_return 1;
+        }
     }
-    else if (m_registered_page == "eoLive") {
-        co_await convert_to_eolive(source_file, values);
+    catch (const winrt::hresult_error& e) {
+        m_error_msg = winrt::to_string(e.message()); 
+        co_return 1; 
     }
-    else if (m_registered_page == "eoSight") {
-        co_await convert_to_eosight(source_file, values);
-    }
+    
 
     co_return 0;
 }
@@ -66,58 +74,63 @@ int ConvertionManager::check_input_valid() {
 }
 
 winrt::Windows::Foundation::IAsyncAction ConvertionManager::convert_to_smops(winrt::hstring source_file, std::vector<std::string> values) {
-    std::wstringstream wss;
-    if (m_filter_type == "is one of") {
-        wss << "{\n"
-            << "\"query\": {\n"
-            << "\"bool\": {\n"
-            << "\"should\": [\n";
-    }
-    else if (m_filter_type == "is not one of") {
-        wss << "{\n"
-            << "\"query\": {\n"
-            << "\"bool\": {\n"
-            << "\"must_not\": [\n";
-    }
-    else {
-        m_error_msg = "Unknown filter-type";
-        co_return;
-    }
+    try {
+        std::wstringstream wss;
+        if (m_filter_type == "is one of") {
+            wss << "{\n"
+                << "\"query\": {\n"
+                << "\"bool\": {\n"
+                << "\"should\": [\n";
+        }
+        else if (m_filter_type == "is not one of") {
+            wss << "{\n"
+                << "\"query\": {\n"
+                << "\"bool\": {\n"
+                << "\"must_not\": [\n";
+        }
+        else {
+            m_error_msg = "Unknown filter-type";
+            co_return;
+        }
 
-    for (std::size_t i = 0; i < values.size() - 1; i++) {
-        std::wstring w_value(values[i].begin(), values[i].end()); 
-        std::wstring w_filter(m_filter_value.begin(), m_filter_value.end()); 
+        for (std::size_t i = 0; i < values.size() - 1; i++) {
+            std::wstring w_value(values[i].begin(), values[i].end());
+            std::wstring w_filter(m_filter_value.begin(), m_filter_value.end());
+            wss << "{\n"
+                << "\"match_phrase\": {\n"
+                << "\""
+                << w_filter
+                << "\": \""
+                << w_value
+                << "\"\n"
+                << "}\n"
+                << "},\n";
+        }
+
+        std::wstring w_last_value(values.back().begin(), values.back().end());
+        std::wstring w_filter(m_filter_value.begin(), m_filter_value.end());
         wss << "{\n"
             << "\"match_phrase\": {\n"
             << "\""
             << w_filter
             << "\": \""
-            << w_value
+            << w_last_value
             << "\"\n"
-                << "}\n"
-                << "},\n";
+            << "}\n"
+            << "}\n";
+
+        wss << "],\n"
+            << "\"minimum_should_match\": 1\n"
+            << "}\n"
+            << "}\n"
+            << "}";
+
+        std::wstring content = wss.str();
+        co_await FileHandler::write_file(source_file, std::wstring(m_registered_page.begin(), m_registered_page.end()), content);
     }
-
-    std::wstring w_last_value(values.back().begin(), values.back().end()); 
-    std::wstring w_filter(m_filter_value.begin(), m_filter_value.end()); 
-    wss << "{\n"
-        << "\"match_phrase\": {\n"
-        << "\""
-        << w_filter
-        << "\": \""
-        << w_last_value
-        << "\"\n"
-        << "}\n"
-        << "}\n";
-
-    wss << "],\n"
-        << "\"minimum_should_match\": 1\n"
-        << "}\n"
-        << "}\n"
-        << "}";
-
-    std::wstring content = wss.str(); 
-    co_await FileHandler::write_file(source_file, std::wstring(m_registered_page.begin(), m_registered_page.end()), content);
+    catch (const winrt::hresult_error& e) {
+        m_error_msg = winrt::to_string(e.message());
+    }
     co_return;
 }
 
@@ -189,4 +202,8 @@ winrt::Windows::Foundation::IAsyncAction ConvertionManager::convert_to_eosight(w
     std::wstring content = wss.str();
     co_await FileHandler::write_file(source_file, std::wstring(m_registered_page.begin(), m_registered_page.end()), content);
     co_return;
+}
+
+std::string ConvertionManager::get_error_msg() {
+    return m_error_msg;
 }

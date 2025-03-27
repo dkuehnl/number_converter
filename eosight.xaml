@@ -8,8 +8,30 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-        <TextBlock x:Name="lbl_lastname" HorizontalAlignment="Left" Height="16" TextWrapping="Wrap" Text="EoSight" VerticalAlignment="Top" Width="140" Margin="260,268,0,0"/>
-    </StackPanel>
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="Configure Filter for eoSight" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,10,0,0"/>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,10,0,0">
+                <StackPanel Orientation="Vertical" Margin="0,20,0,0">
+                    <RadioButton x:Name="contains" Content="contains" Height="36" Width="107" Checked="rb_filter_kind"/>
+                    <RadioButton x:Name="equal" Content="equal" Height="36" Width="107" Checked="rb_filter_kind"/>
+                </StackPanel>
+
+                <TreeView x:Name="tv_element_selection" SelectionMode="Single" Width="500" SelectionChanged="tv_element_selection_SChanged"/>
+            </StackPanel>
+            <StackPanel Margin="110,30,0,0" Width="500" HorizontalAlignment="Left">
+                <TextBlock Text="If no valid field is available, enter your custom header:" />
+                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                    <ToggleSwitch AutomationProperties.Name="no_field" Toggled="ts_alt_search_field"/>
+                    <TextBox x:Name="tb_alt_search_field" Width="400" Height="28" PlaceholderText="custom_header" IsEnabled="False"/>
+                </StackPanel>
+                <TextBlock Text="Disable File-Export:" Margin="0,10,0,0" />
+                <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
+                    <ToggleSwitch AutomationProperties.Name="save_to_file" VerticalAlignment="Top" IsEnabled="False"/>
+                    <RichEditBox x:Name="reb_alt_file_path" Height="200" Width="400" IsEnabled="False"/>
+                </StackPanel>
+            </StackPanel>
+
+        </StackPanel>
+    </Grid>
 </Page>

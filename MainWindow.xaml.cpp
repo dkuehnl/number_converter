@@ -208,7 +208,12 @@ namespace winrt::App1::implementation
 
     winrt::fire_and_forget MainWindow::btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
         std::vector<std::string> searched_values = m_parser->get_specific_values(winrt::to_string(m_selected_header));
-        co_await m_convert.convert(m_selected_file.Path(), searched_values); 
+        if (co_await m_convert.convert(m_selected_file.Path(), searched_values) != 0) {
+            MainWindow::handle_infobar("Error", winrt::to_hstring(m_convert.get_error_msg()), "error"); 
+        }
+        else {
+            MainWindow::handle_infobar("Info", L"Konvertierung erfolgreich", "success"); 
+        }
 
     }
 
