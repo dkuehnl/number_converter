@@ -37,10 +37,10 @@ namespace winrt::App1::implementation
 
     void eolive::OnLoaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
         json_parser& parser = App::GetJsonParser();
-        std::unordered_map<std::string, std::vector<std::string>> smops_filter = parser.get_smops_filter();
+        std::vector<std::string> smops_filter = parser.get_eolive_filter();
         eolive::build_treeview(smops_filter);
 
-        m_convert.register_page("SMOPS");
+        m_convert.register_page("eoLive");
     }
 
     void eolive::build_treeview(std::unordered_map<std::string, std::vector<std::string>> value_map) {
