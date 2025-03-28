@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Title="App1">
 
-    <Grid Background="{ThemeResource SolidBackgroundFillColorBaseAltBrush}" MinWidth="1280" MinHeight="720">
+    <Grid Background="{ThemeResource SolidBackgroundFillColorBaseAltBrush}" Width="1180" MinHeight="720">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -33,7 +33,7 @@
                 <ColumnDefinition Width="500"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" Padding="10">
+            <StackPanel Grid.Column="0" Padding="10" Margin="20,0,0,0">
                 <TextBlock Text="Source Data" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Center"/>
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Upload File" x:Name="file_picker" Click="click_file_picker"/>

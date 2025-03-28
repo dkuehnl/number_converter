@@ -11,15 +11,20 @@
     <Grid>
         <StackPanel>
             <TextBlock Text="Configure Filter for SMOPS" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,10,0,0"/>
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,10,0,0">
-                <StackPanel Orientation="Vertical" Margin="0,20,0,0">
-                    <RadioButton x:Name="one_of_button" Content="is one of" Height="36" Width="107" Checked="rb_one_of_checked"/>
-                    <RadioButton x:Name="not_one_of_button" Content="is not one of" Height="36" Width="107" Checked="rb_one_of_checked"/>
-                </StackPanel>
-
-                <TreeView x:Name="tv_element_selection" SelectionMode="Single" Width="500" SelectionChanged="tv_element_selection_SChanged"/>
-            </StackPanel>
             <StackPanel Margin="110,30,0,0" Width="500" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" Margin="30,0,0,20">
+                    <StackPanel Orientation="Vertical" Margin="0,20,0,0">
+                        <RadioButton x:Name="one_of_button" Content="is one of" Height="36" Width="107" Checked="rb_one_of_checked"/>
+                        <RadioButton x:Name="not_one_of_button" Content="is not one of" Height="36" Width="107" Checked="rb_one_of_checked"/>
+                    </StackPanel>
+
+                    <TreeView 
+                        x:Name="tv_element_selection" 
+                        SelectionMode="Single" 
+                        Width="350" 
+                        Height="130" 
+                        SelectionChanged="tv_element_selection_SChanged"/>
+                </StackPanel>
                 <TextBlock Text="If no valid field is available, enter your custom header:" />
                 <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
                     <ToggleSwitch AutomationProperties.Name="no_field" Toggled="ts_alt_search_field"/>

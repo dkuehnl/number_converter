@@ -37,33 +37,25 @@ namespace winrt::App1::implementation
 
     void eosight::OnLoaded(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e) {
         json_parser& parser = App::GetJsonParser();
-        std::unordered_map<std::string, std::vector<std::string>> smops_filter = parser.get_smops_filter();
-        eosight::build_treeview(smops_filter);
+        std::vector<std::string> smops_filter = parser.get_eosight_filter();
+        eosight::build_listview(smops_filter);
 
         m_convert.register_page("eoSight");
     }
 
-    void eosight::build_treeview(std::unordered_map<std::string, std::vector<std::string>> value_map) {
-        for (const auto& [key, value] : value_map) {
-            TreeViewNode root_node = TreeViewNode();
-            root_node.Content(box_value(winrt::to_hstring(key)));
-
-            for (const auto& element : value) {
-                TreeViewNode child_node = TreeViewNode();
-                child_node.Content(box_value(winrt::to_hstring(element)));
-                root_node.Children().Append(child_node);
-            }
-
-            tv_element_selection().RootNodes().Append(root_node);
+    void eosight::build_listview(std::vector<std::string> value_vector) {
+        Windows::Foundation::Collections::IObservableVector<hstring> items = winrt::single_threaded_observable_vector<hstring>();
+        for (const auto& element : value_vector) {
+            items.Append(winrt::to_hstring(element));
         }
+        lv_element_selection().ItemsSource(items);
     }
 
-    void eosight::tv_element_selection_SChanged(winrt::Microsoft::UI::Xaml::Controls::TreeView const& sender, winrt::Microsoft::UI::Xaml::Controls::TreeViewSelectionChangedEventArgs const& args) {
+    void eosight::lv_element_selection_SChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e) {
         if (!m_alt_search_field_active) {
-            if (sender.SelectedNodes().Size() > 0) {
-                auto selectedNode = sender.SelectedNodes().GetAt(0);
-                winrt::hstring node_text = winrt::unbox_value<winrt::hstring>(selectedNode.Content());
-                m_search_filter = node_text;
+            for (auto const& item : e.AddedItems()) {
+                auto text = winrt::unbox_value<winrt::hstring>(item);
+                m_search_filter = text;
                 m_convert.set_filter_value(winrt::to_string(m_search_filter));
             }
         }
