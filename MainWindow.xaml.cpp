@@ -6,6 +6,7 @@
 #include "smops.xaml.h"
 #include "eolive.xaml.h"
 #include "eosight.xaml.h"
+#include "SettingsPage.xaml.h"
 #include "convertion_manager.h"
 #include "file_handling.h"
 #include "App.xaml.h" 
@@ -61,17 +62,23 @@ namespace winrt::App1::implementation
     }
 
     void MainWindow::navView_SelectionChanged(Microsoft::UI::Xaml::Controls::NavigationView const& sender, Microsoft::UI::Xaml::Controls::NavigationViewSelectionChangedEventArgs const& args) {
-        auto selectedItem = args.SelectedItem().try_as<Microsoft::UI::Xaml::Controls::NavigationViewItem>(); 
-        if (selectedItem) {
-            hstring tag = unbox_value<hstring>(selectedItem.Tag()); 
-            if (tag == L"smops") {
-                ContentFrame().Navigate(xaml_typename<App1::smops>()); 
-            }
-            else if (tag == L"eolive") {
-                ContentFrame().Navigate(xaml_typename<App1::eolive>());
-            }
-            else if (tag == L"eosight") {
-                ContentFrame().Navigate(xaml_typename<App1::eosight>()); 
+        auto selected_container = args.SelectedItemContainer();
+        if (selected_container == sender.SettingsItem()) {
+            ContentFrame().Navigate(xaml_typename<App1::SettingsPage>());
+        }
+        else
+        {
+            if (auto selectedItem = args.SelectedItem().try_as<Microsoft::UI::Xaml::Controls::NavigationViewItem>()) {
+                hstring tag = unbox_value<hstring>(selectedItem.Tag());
+                if (tag == L"smops") {
+                    ContentFrame().Navigate(xaml_typename<App1::smops>());
+                }
+                else if (tag == L"eolive") {
+                    ContentFrame().Navigate(xaml_typename<App1::eolive>());
+                }
+                else if (tag == L"eosight") {
+                    ContentFrame().Navigate(xaml_typename<App1::eosight>());
+                }
             }
         }
     }

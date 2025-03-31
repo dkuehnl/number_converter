@@ -14,6 +14,9 @@
     <Page Include="smops.xaml">
       <Filter>sites</Filter>
     </Page>
+    <Page Include="SettingsPage.xaml">
+      <Filter>sites</Filter>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="MainWindow.idl" />
@@ -33,6 +36,7 @@
     <ClCompile Include="convertion_manager.cpp">
       <Filter>converter</Filter>
     </ClCompile>
+    <ClCompile Include="file_handling.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -49,9 +53,7 @@
     <ClInclude Include="convertion_manager.h">
       <Filter>converter</Filter>
     </ClInclude>
-    <ClInclude Include="base_page.h">
-      <Filter>converter</Filter>
-    </ClInclude>
+    <ClInclude Include="file_handling.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
