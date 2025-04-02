@@ -10,10 +10,12 @@ public:
 	const std::unordered_map<std::string, std::vector<std::string>>& get_smops_filter() const;
 	const std::vector<std::string>& get_eosight_filter() const;
 	const std::vector<std::string>& get_eolive_filter() const;
+	const unsigned int& get_preview_lines() const; 
 
 private:
 	std::unordered_map<std::string, std::vector<std::string>> m_parsed_smops;
 	std::vector<std::string> m_parsed_eosight;
 	std::vector<std::string> m_parsed_eolive;
+	unsigned int m_preview_lines; 
 };
 

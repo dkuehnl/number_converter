@@ -34,6 +34,9 @@ using json = nlohmann::json;
 				 m_parsed_eosight.push_back(element.get<std::string>()); 
 			 }
 		 }
+		 else if (key == "preview_lines") {
+			 m_preview_lines = value; 
+		 }
 	 }
 }
 
@@ -47,4 +50,8 @@ const std::vector<std::string>& json_parser::get_eosight_filter() const{
 
 const std::vector<std::string>& json_parser::get_eolive_filter() const{
 	return m_parsed_eolive;
+}
+
+const unsigned int& json_parser::get_preview_lines() const {
+	return m_preview_lines;
 }

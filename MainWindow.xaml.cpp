@@ -176,8 +176,6 @@ namespace winrt::App1::implementation
         if (auto com_box = sender.try_as<ComboBox>()) {
             if (com_box.SelectedItem() != nullptr) {
                 m_selected_header = winrt::unbox_value<hstring>(com_box.SelectedItem());
-                hstring message = L"Selected header: " + m_selected_header;
-                MainWindow::handle_infobar("Info", message, "info");
             }
             else {
                 MainWindow::handle_infobar("Error", L"Combox empty, could not assign any value for further proceeding", "error"); 
