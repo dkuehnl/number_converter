@@ -62,6 +62,7 @@ namespace winrt::App1::implementation
     }
 
     void MainWindow::navView_SelectionChanged(Microsoft::UI::Xaml::Controls::NavigationView const& sender, Microsoft::UI::Xaml::Controls::NavigationViewSelectionChangedEventArgs const& args) {
+        OutputDebugString(L"navView_SelectionChenged\n"); 
         auto selected_container = args.SelectedItemContainer();
         if (selected_container == sender.SettingsItem()) {
             ContentFrame().Navigate(xaml_typename<App1::SettingsPage>());

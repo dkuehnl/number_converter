@@ -16,7 +16,7 @@ namespace winrt::App1::implementation
     private:
         static ConvertionManager m_convertion_manager;
         static json_parser m_json_parser;
-        std::string m_json_file_url; 
+        std::string m_json_file_url = "A:\\Workspace\\Programming\\cpp\\number_converter\\testing-space\\smops_values.json";
         winrt::Microsoft::UI::Xaml::Window window{ nullptr };
     };
 }

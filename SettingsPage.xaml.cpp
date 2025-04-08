@@ -35,27 +35,6 @@ namespace winrt::App1::implementation
 
 }
 
-void winrt::App1::implementation::SettingsPage::auto_main_categorie_GotFocus(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
-{
-    if (auto box = sender.try_as<winrt::Microsoft::UI::Xaml::Controls::AutoSuggestBox>()) {
-        auto item_list = winrt::single_threaded_vector<winrt::Windows::Foundation::IInspectable>(); 
-
-        for (const auto& [key, value] : m_parser.get_smops_filter()) {
-            //OutputDebugStringA(key.c_str());
-            item_list.Append(winrt::box_value(winrt::to_hstring(key)));
-        }
-
-        if (item_list.Size() > 0) {
-            OutputDebugString(L"If-Zweig");
-            box.ItemsSource(item_list);
-        }
-        else {
-            box.ItemsSource(nullptr); 
-        }
-        
-     }
-}
-
 void winrt::App1::implementation::SettingsPage::ComboBox_SelectionChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e)
 {
     if (auto com_box = sender.try_as<winrt::Microsoft::UI::Xaml::Controls::ComboBox>()) {
@@ -65,9 +44,43 @@ void winrt::App1::implementation::SettingsPage::ComboBox_SelectionChanged(winrt:
     }
 
     if (m_selected_filter == "SMOPS") {
-        auto_main_categorie().IsEnabled(true); 
+        cb_main_categorie().IsEnabled(true); 
+        for (const auto& [key, value] : m_parser.get_smops_filter()) {
+            m_header_collection.Append(winrt::to_hstring(key));
+        }
+        cb_main_categorie().ItemsSource(m_header_collection);
+        cb_main_categorie().SelectedIndex(0); 
     }
     else {
-        auto_main_categorie().IsEnabled(false); 
+        cb_main_categorie().IsEnabled(false); 
     }
+}
+
+void winrt::App1::implementation::SettingsPage::btn_save_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
+{
+    m_parser.update_preview_lines(static_cast<unsigned int>(nmb_preview_lines().Value()));
+
+    auto content = tb_new_value().Text(); 
+    if (!content.empty()) {
+        std::string new_value = winrt::to_string(content);
+        if (m_selected_filter == "SMOPS") {
+            auto selected_item = cb_main_categorie().SelectedItem();
+            if (selected_item) {
+                std::string selected_key = winrt::to_string(selected_item.as<winrt::hstring>());
+
+                m_parser.add_smops_filter(selected_key, new_value);
+            }
+        }
+        else if (m_selected_filter == "eoLive") {
+            m_parser.add_eolive_filter(new_value);
+        }
+        else if (m_selected_filter == "eoSight") {
+            m_parser.add_eosight_filter(new_value);
+        }
+        else {
+
+        }
+    }
+
+    m_parser.save(); 
 }
