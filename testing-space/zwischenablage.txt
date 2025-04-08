@@ -1,0 +1,95 @@
+#include "CSVParser.hpp"
+#include <sstream>
+#include <winrt/Windows.Storage.h>
+#include <winrt/Windows.Storage.FileProperties.h>
+#include <winrt/Windows.Storage.Streams.h>
+#include <winrt/Windows.Foundation.h>
+#include <winrt/base.h> // Für winrt::to_string
+
+using namespace winrt;
+using namespace Windows::Storage;
+using namespace Windows::Storage::Streams;
+using namespace Windows::Foundation;
+
+// Funktion 1: Liest den gesamten Inhalt der Datei ein
+void CSVParser::LoadFile(StorageFile const& file)
+{
+    // Lese den gesamten Text der Datei (synchron blockierend, .get() wird hier verwendet)
+    hstring fileText = FileIO::ReadTextAsync(file).get();
+
+    // Konvertiere den hstring in std::string (hier gehen wir der Einfachheit halber von ASCII/UTF-8 aus)
+    std::string fileContent = to_string(fileText);
+
+    // Zerlege den Inhalt in Zeilen
+    std::istringstream iss(fileContent);
+    std::string line;
+    m_lines.clear();
+    while (std::getline(iss, line)) {
+        if (!line.empty()) {
+            m_lines.push_back(line);
+        }
+    }
+}
+
+// Funktion 2: Gibt den Header (erste Zeile) als Vektor zurück
+std::vector<std::string> CSVParser::GetHeaders() const
+{
+    if (m_lines.empty())
+        return {};
+    return Split(m_lines.front(), ',');
+}
+
+// Funktion 3: Gibt die Wertezeilen (ohne Header) als 2D-Vektor zurück
+std::vector<std::vector<std::string>> CSVParser::GetRows() const
+{
+    std::vector<std::vector<std::string>> rows;
+    // Falls keine Zeilen vorhanden sind oder nur der Header existiert, gib einen leeren Vektor zurück
+    if (m_lines.size() < 2)
+        return rows;
+
+    // Ab der zweiten Zeile die Werte extrahieren
+    for (size_t i = 1; i < m_lines.size(); i++) {
+        rows.push_back(Split(m_lines[i], ','));
+    }
+    return rows;
+}
+
+// Funktion 4: Gibt alle Werte zurück, die in der angegebenen Spalte stehen
+std::vector<std::string> CSVParser::GetColumnValues(const std::string& columnName) const
+{
+    std::vector<std::string> columnValues;
+
+    // Zuerst die Header ermitteln und den Index der gewünschten Spalte suchen
+    auto headers = GetHeaders();
+    int columnIndex = -1;
+    for (size_t i = 0; i < headers.size(); i++) {
+        if (headers[i] == columnName) {
+            columnIndex = static_cast<int>(i);
+            break;
+        }
+    }
+    // Falls der Spaltenname nicht gefunden wurde, gib einen leeren Vektor zurück
+    if (columnIndex == -1)
+        return columnValues;
+
+    // Nun alle Zeilen durchlaufen und den Wert der gewünschten Spalte hinzufügen
+    auto rows = GetRows();
+    for (const auto& row : rows) {
+        if (columnIndex < static_cast<int>(row.size())) {
+            columnValues.push_back(row[columnIndex]);
+        }
+    }
+    return columnValues;
+}
+
+// Hilfsfunktion: Zerlegt einen String anhand eines Trennzeichens
+std::vector<std::string> CSVParser::Split(const std::string& line, char delimiter) const
+{
+    std::vector<std::string> tokens;
+    std::string token;
+    std::istringstream tokenStream(line);
+    while (std::getline(tokenStream, token, delimiter)) {
+        tokens.push_back(token);
+    }
+    return tokens;
+}
