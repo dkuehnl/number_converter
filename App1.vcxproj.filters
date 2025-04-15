@@ -39,6 +39,9 @@
       <Filter>converter</Filter>
     </ClCompile>
     <ClCompile Include="file_handling.cpp" />
+    <ClCompile Include="custom_input_parser.cpp">
+      <Filter>parser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -56,6 +59,9 @@
       <Filter>converter</Filter>
     </ClInclude>
     <ClInclude Include="file_handling.h" />
+    <ClInclude Include="custom_input_parser.h">
+      <Filter>parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">

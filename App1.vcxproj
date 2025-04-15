@@ -109,6 +109,7 @@
   <ItemGroup>
     <ClInclude Include="convertion_manager.h" />
     <ClInclude Include="csv_parser.h" />
+    <ClInclude Include="custom_input_parser.h" />
     <ClInclude Include="eolive.xaml.h">
       <DependentUpon>eolive.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -156,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="convertion_manager.cpp" />
     <ClCompile Include="csv_parser.cpp" />
+    <ClCompile Include="custom_input_parser.cpp" />
     <ClCompile Include="eolive.xaml.cpp">
       <DependentUpon>eolive.xaml</DependentUpon>
       <SubType>Code</SubType>

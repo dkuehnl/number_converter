@@ -1,11 +1,17 @@
 #include "pch.h"
 #include "file_handling.h"
+#pragma comment(lib, "Shell32.lib")
 
 #include <filesystem>
+#include <cstdlib>
+
 #include <winrt/base.h>
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Storage.Pickers.h>
 #include <winrt/Windows.Foundation.h>
+#include <windows.h>
+#include <ShlObj.h>
+#include <KnownFolders.h>
 
 namespace FileHandler {
     winrt::Windows::Foundation::IAsyncOperation<winrt::Windows::Storage::StorageFile> pick_file(HWND hWnd) {
@@ -49,6 +55,17 @@ namespace FileHandler {
         std::wstring w_folder_path = fs_path.parent_path().wstring();        
         winrt::hstring folder_path(w_folder_path.c_str());
         return folder_path;
+    }
+
+    winrt::hstring get_downloads_path() {
+        PWSTR path = nullptr; 
+        std::wstring download_path; 
+        if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Downloads, 0, nullptr, &path))) {
+            download_path = path; 
+            CoTaskMemFree(path); 
+        }
+
+        return winrt::to_hstring(download_path.c_str());
     }
 
 }

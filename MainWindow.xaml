@@ -59,7 +59,7 @@
                 </Border>
                 <TextBlock Text="OR" FontWeight="Bold" Margin="0,20,0,0" HorizontalAlignment="Center"/>
                 <TextBlock Text="Enter Custom values, separeted by ',':" FontSize="11" Margin="10,10,0,5"/>
-                <RichEditBox Height="200" Margin="10,0,8,0" />
+                <RichEditBox x:Name="alt_custom_txt" Height="200" Margin="10,0,8,0" TextChanged="alt_custom_txt_TextChanged"/>
 
             </StackPanel>
 

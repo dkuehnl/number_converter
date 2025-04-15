@@ -22,6 +22,7 @@ namespace winrt::App1::implementation
         void cb_header_chg(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::Controls::SelectionChangedEventArgs const& e);
         void handle_infobar(const std::string& title, const hstring& message, const std::string& severity); 
         winrt::fire_and_forget btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args);
+        void alt_custom_txt_TextChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
 
     private:
         ConvertionManager& m_convert;
@@ -33,6 +34,7 @@ namespace winrt::App1::implementation
         winrt::Windows::Foundation::Collections::IObservableVector<winrt::hstring> m_header_collection{winrt::single_threaded_observable_vector<winrt::hstring>()};
         winrt::Windows::Foundation::IAsyncAction display_file();
         hstring m_selected_header = L" ";
+        hstring m_custom_input = L" ";
     };
 }
 

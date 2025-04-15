@@ -9,6 +9,7 @@
 #include "SettingsPage.xaml.h"
 #include "convertion_manager.h"
 #include "file_handling.h"
+#include "custom_input_parser.h"
 #include "App.xaml.h" 
 
 #include <iostream>
@@ -20,6 +21,7 @@
 #include <winrt/Microsoft.UI.Xaml.h>
 #include <winrt/Microsoft.UI.Dispatching.h>
 #include <winrt/Microsoft.UI.Xaml.Documents.h>
+#include <winrt/Microsoft.UI.Text.h>
 #include <winrt/Windows.UI.h>
 #include <winrt/Windows.UI.Xaml.Interop.h>
 #include <winrt/Windows.Storage.h>
@@ -105,6 +107,7 @@ namespace winrt::App1::implementation
         winrt::Windows::Storage::StorageFile file = co_await FileHandler::pick_file(hWnd); 
         if (file != nullptr) {
             file_picker_output().Text(file.Name());
+            alt_custom_txt().IsEnabled(false);
             m_selected_file = file;
             co_await display_file();
         }
@@ -213,14 +216,35 @@ namespace winrt::App1::implementation
     }
 
     winrt::fire_and_forget MainWindow::btn_convert_click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& args) {
-        std::vector<std::string> searched_values = m_parser->get_specific_values(winrt::to_string(m_selected_header));
-        if (co_await m_convert.convert(m_selected_file.Path(), searched_values) != 0) {
-            MainWindow::handle_infobar("Error", winrt::to_hstring(m_convert.get_error_msg()), "error"); 
+        winrt::hstring file_path = L"";
+        std::vector<std::string> searched_values = {};
+
+        if (!m_custom_input.empty()) {
+            searched_values = CustomInputParser::parse_custom_input(m_custom_input);
+            file_path = FileHandler::get_downloads_path();
         }
         else {
-            MainWindow::handle_infobar("Info", L"Konvertierung erfolgreich", "success"); 
+            searched_values = m_parser->get_specific_values(winrt::to_string(m_selected_header));
+            file_path = m_selected_file.Path();
         }
 
+        if (co_await m_convert.convert(file_path, searched_values) != 0) {
+            MainWindow::handle_infobar("Error", winrt::to_hstring(m_convert.get_error_msg()), "error");
+        }
+        else {
+            MainWindow::handle_infobar("Info", L"Konvertierung erfolgreich", "success");
+        }
+    }
+}
+
+void winrt::App1::implementation::MainWindow::alt_custom_txt_TextChanged(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e)
+{
+    alt_custom_txt().Document().GetText(winrt::Microsoft::UI::Text::TextGetOptions::None, m_custom_input);
+    if (!m_custom_input.empty() && !std::all_of(m_custom_input.begin(), m_custom_input.end(), iswspace)) {
+        file_picker().IsEnabled(false);
+    }
+    else {
+        file_picker().IsEnabled(true); 
     }
 
 }
