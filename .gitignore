@@ -427,3 +427,6 @@ packages/
 
 # Weitere tempor�re Dateien
 *.log
+
+# Leftover resource-compiler intermediate artifact (see _to_delete/RCa09000)
+/RCa09000

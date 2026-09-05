@@ -1,65 +1,65 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
+    <ApplicationDefinition Include="src\gui\App.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="eolive.xaml">
+    <Page Include="src\gui\eolive.xaml">
       <Filter>sites</Filter>
     </Page>
-    <Page Include="eosight.xaml">
+    <Page Include="src\gui\eosight.xaml">
       <Filter>sites</Filter>
     </Page>
-    <Page Include="smops.xaml">
+    <Page Include="src\gui\smops.xaml">
       <Filter>sites</Filter>
     </Page>
-    <Page Include="SettingsPage.xaml">
+    <Page Include="src\gui\SettingsPage.xaml">
       <Filter>sites</Filter>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="src\gui\MainWindow.xaml">
       <Filter>sites</Filter>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="MainWindow.idl" />
+    <Midl Include="src\gui\MainWindow.idl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <ClCompile Include="csv_parser.cpp">
+    <ClCompile Include="src\core\csv_parser.cpp">
       <Filter>parser</Filter>
     </ClCompile>
-    <ClCompile Include="xlsx_parser.cpp">
+    <ClCompile Include="src\core\xlsx_parser.cpp">
       <Filter>parser</Filter>
     </ClCompile>
-    <ClCompile Include="json_parser.cpp">
+    <ClCompile Include="src\core\json_parser.cpp">
       <Filter>parser</Filter>
     </ClCompile>
-    <ClCompile Include="convertion_manager.cpp">
+    <ClCompile Include="src\core\convertion_manager.cpp">
       <Filter>converter</Filter>
     </ClCompile>
-    <ClCompile Include="file_handling.cpp" />
-    <ClCompile Include="custom_input_parser.cpp">
+    <ClCompile Include="src\core\file_handling.cpp" />
+    <ClCompile Include="src\core\custom_input_parser.cpp">
       <Filter>parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="csv_parser.h">
+    <ClInclude Include="src\core\csv_parser.h">
       <Filter>parser</Filter>
     </ClInclude>
-    <ClInclude Include="xlsx_parser.h">
+    <ClInclude Include="src\core\xlsx_parser.h">
       <Filter>parser</Filter>
     </ClInclude>
-    <ClInclude Include="json_parser.h">
+    <ClInclude Include="src\core\json_parser.h">
       <Filter>parser</Filter>
     </ClInclude>
-    <ClInclude Include="convertion_manager.h">
+    <ClInclude Include="src\core\convertion_manager.h">
       <Filter>converter</Filter>
     </ClInclude>
-    <ClInclude Include="file_handling.h" />
-    <ClInclude Include="custom_input_parser.h">
+    <ClInclude Include="src\core\file_handling.h" />
+    <ClInclude Include="src\core\custom_input_parser.h">
       <Filter>parser</Filter>
     </ClInclude>
   </ItemGroup>

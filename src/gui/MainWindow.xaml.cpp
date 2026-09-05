@@ -154,6 +154,12 @@ namespace winrt::App1::implementation
             else if (m_selected_file.FileType() == L".xls") {
                 MainWindow::handle_infobar("Info", L"The file-type .xls is not implemented yet.", "info");
             }
+            // TODO: .xlsx is offered in the file picker's FileTypeFilter
+            // (see FileHandler::pick_file()) but has no branch here at all
+            // -- picking an .xlsx file silently does nothing (no parser
+            // runs, no info bar shown). Add an .xlsx branch once
+            // XLSXparser (see xlsx_parser.h) is implemented, or at least
+            // show the same "not implemented yet" info bar as .xls.
         }
         else {
             data_output().Text(L"No File selected"); 

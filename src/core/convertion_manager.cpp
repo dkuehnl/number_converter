@@ -137,6 +137,13 @@ winrt::Windows::Foundation::IAsyncAction ConvertionManager::convert_to_smops(win
 winrt::Windows::Foundation::IAsyncAction ConvertionManager::convert_to_eolive(winrt::hstring source_file, std::vector<std::string> values) {
     std::wstringstream wss; 
     std::wstring w_filter(m_filter_value.begin(), m_filter_value.end());
+    // TODO: Unlike convert_to_smops() and convert_to_eosight(), there is no
+    // else-branch here for an unrecognized m_filter_type -- if it isn't
+    // "begins", the opening "[...] begins (" clause below is silently
+    // skipped while the rest of the function still runs and writes a
+    // malformed (unopened) expression to file, with no error reported via
+    // m_error_msg. Add the same "else { m_error_msg = ...; co_return; }"
+    // guard the other two conversion functions have.
     if (m_filter_type == "begins") {
         wss << "["
             << w_filter

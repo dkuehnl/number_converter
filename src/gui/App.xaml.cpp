@@ -10,6 +10,14 @@ using namespace Microsoft::UI::Xaml;
 
 namespace winrt::App1::implementation
 {
+    // TODO: This is hardcoded to an absolute, machine-specific path (and the
+    // commented-out line above it is a *different* machine-specific path from
+    // an earlier setup) -- the app currently only finds its filter
+    // configuration if smops_values.json happens to exist at this exact
+    // location on this exact machine, and it depends on testing-space/ (a
+    // dev scratch folder) being present as if it were production data. This
+    // should become a relative/deployed path (e.g. next to the executable,
+    // or under a proper Windows ApplicationData folder) instead.
     //json_parser App::m_json_parser{ "C:\\Users\\dkueh\\source\\repos\\dkuehnl\\number_converter\\testing-space\\smops_values.json" }; //Laptop-IDE
     json_parser App::m_json_parser{ "A:\\Workspace\\Programming\\cpp\\number_converter\\testing-space\\smops_values.json" };
     ConvertionManager App::m_convertion_manager;

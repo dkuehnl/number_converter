@@ -82,6 +82,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level4</WarningLevel>
       <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)src\core;$(ProjectDir)src\gui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
@@ -107,105 +108,105 @@
     <Manifest Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="convertion_manager.h" />
-    <ClInclude Include="csv_parser.h" />
-    <ClInclude Include="custom_input_parser.h" />
-    <ClInclude Include="eolive.xaml.h">
+    <ClInclude Include="src\core\convertion_manager.h" />
+    <ClInclude Include="src\core\csv_parser.h" />
+    <ClInclude Include="src\core\custom_input_parser.h" />
+    <ClInclude Include="src\gui\eolive.xaml.h">
       <DependentUpon>eolive.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
-    <ClInclude Include="eosight.xaml.h">
+    <ClInclude Include="src\gui\eosight.xaml.h">
       <DependentUpon>eosight.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
-    <ClInclude Include="file_handling.h" />
-    <ClInclude Include="json_parser.h" />
+    <ClInclude Include="src\core\file_handling.h" />
+    <ClInclude Include="src\core\json_parser.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="App.xaml.h">
+    <ClInclude Include="src\gui\App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="MainWindow.xaml.h">
+    <ClInclude Include="src\gui\MainWindow.xaml.h">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SettingsPage.xaml.h">
+    <ClInclude Include="src\gui\SettingsPage.xaml.h">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
-    <ClInclude Include="smops.xaml.h">
+    <ClInclude Include="src\gui\smops.xaml.h">
       <DependentUpon>smops.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
-    <ClInclude Include="xlsx_parser.h" />
+    <ClInclude Include="src\core\xlsx_parser.h" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
-    <Page Include="eolive.xaml">
+    <ApplicationDefinition Include="src\gui\App.xaml" />
+    <Page Include="src\gui\eolive.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="eosight.xaml">
+    <Page Include="src\gui\eosight.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MainWindow.xaml" />
-    <Page Include="SettingsPage.xaml">
+    <Page Include="src\gui\MainWindow.xaml" />
+    <Page Include="src\gui\SettingsPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="smops.xaml">
+    <Page Include="src\gui\smops.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="convertion_manager.cpp" />
-    <ClCompile Include="csv_parser.cpp" />
-    <ClCompile Include="custom_input_parser.cpp" />
-    <ClCompile Include="eolive.xaml.cpp">
+    <ClCompile Include="src\core\convertion_manager.cpp" />
+    <ClCompile Include="src\core\csv_parser.cpp" />
+    <ClCompile Include="src\core\custom_input_parser.cpp" />
+    <ClCompile Include="src\gui\eolive.xaml.cpp">
       <DependentUpon>eolive.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
-    <ClCompile Include="eosight.xaml.cpp">
+    <ClCompile Include="src\gui\eosight.xaml.cpp">
       <DependentUpon>eosight.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
-    <ClCompile Include="file_handling.cpp" />
-    <ClCompile Include="json_parser.cpp" />
+    <ClCompile Include="src\core\file_handling.cpp" />
+    <ClCompile Include="src\core\json_parser.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="App.xaml.cpp">
+    <ClCompile Include="src\gui\App.xaml.cpp">
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="MainWindow.xaml.cpp">
+    <ClCompile Include="src\gui\MainWindow.xaml.cpp">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <ClCompile Include="SettingsPage.xaml.cpp">
+    <ClCompile Include="src\gui\SettingsPage.xaml.cpp">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
-    <ClCompile Include="smops.xaml.cpp">
+    <ClCompile Include="src\gui\smops.xaml.cpp">
       <DependentUpon>smops.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
-    <ClCompile Include="xlsx_parser.cpp" />
+    <ClCompile Include="src\core\xlsx_parser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="eolive.idl">
+    <Midl Include="src\gui\eolive.idl">
       <DependentUpon>eolive.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
-    <Midl Include="eosight.idl">
+    <Midl Include="src\gui\eosight.idl">
       <DependentUpon>eosight.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
-    <Midl Include="MainWindow.idl">
+    <Midl Include="src\gui\MainWindow.idl">
       <SubType>Code</SubType>
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Midl>
-    <Midl Include="SettingsPage.idl">
+    <Midl Include="src\gui\SettingsPage.idl">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
-    <Midl Include="smops.idl">
+    <Midl Include="src\gui\smops.idl">
       <DependentUpon>smops.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>

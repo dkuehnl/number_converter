@@ -14,6 +14,13 @@ json_parser::json_parser(std::string const& filename)
 		 OutputDebugString(L"File couldn't be opened.\n");
 		 return;
 	 }
+	 // TODO: json::parse() throws on malformed JSON, and nothing here catches
+	 // it. App::m_json_parser (see App.xaml.cpp) is a static object, so a
+	 // malformed (but existing) filter file throws during static
+	 // initialization -- before OnLaunched() ever runs -- which calls
+	 // std::terminate() and crashes the app with no visible error. Wrap this
+	 // in a try/catch and fall back to empty filters (like the "file
+	 // couldn't be opened" case above) instead.
 	 json json_file = json::parse(file); 
 
 	 for (auto& [key, value] : json_file.items()) {

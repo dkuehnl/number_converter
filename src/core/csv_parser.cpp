@@ -160,6 +160,11 @@ std::vector<std::string> CSVParser::get_specific_values(const std::string& searc
 }
 
 const bool& CSVParser::is_valid() const {
+    // TODO: Despite its name, this returns m_error -- true means parsing
+    // FAILED, not that the parser is valid. Currently unused anywhere in the
+    // codebase, but the name is a trap for whoever calls it first; either
+    // rename this to is_error()/has_error() or flip the returned value (and
+    // fix the member name/semantics to match "valid").
     return m_error;
 }
 
